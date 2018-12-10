@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="confing/mappers.base_judging_process">
+  <resultMap id="BaseResultMap" type="com.hz.demo.model.base_judging_process">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="JUDGING_CODE" jdbcType="VARCHAR" property="judgingCode" />
+    <result column="PROCESS_GROUP" jdbcType="DECIMAL" property="processGroup" />
+    <result column="PROCESS_TYPE" jdbcType="DECIMAL" property="processType" />
+    <result column="PROCESS_STATE" jdbcType="DECIMAL" property="processState" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="YEAR_NO" jdbcType="VARCHAR" property="yearNo" />
+    <result column="PROCESS_PATTERN" jdbcType="VARCHAR" property="processPattern" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, JUDGING_CODE, PROCESS_GROUP, PROCESS_TYPE, PROCESS_STATE, CREATE_TIME,YEAR_NO,PROCESS_PATTERN
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_JUDGING_PROCESS
+    where JUDGING_CODE = #{JUDGING_CODE}
+    and YEAR_NO=to_char(sysdate,'yyyy')
+  </select>
+  <!--查询评委会当前执行的节点-->
+  <select id="selectCurrentSpeciality" parameterType="java.lang.String" resultType="pd">
+    select
+    bjp.JUDGING_CODE,bjp.PROCESS_TYPE,sm.menu_id menuid,sm.menu_name,sm.menu_code
+    from BASE_JUDGING_PROCESS bjp
+    left join sys_menu sm on sm.fsort=bjp.PROCESS_TYPE  and menu_code like  '03_%'
+    where bjp.JUDGING_CODE = #{JUDGING_CODE} and  bjp.YEAR_NO=to_char(sysdate,'yyyy')
+  </select>
+
+
+  <select id="selectByPrimaryKeytwo" parameterType="java.lang.String" resultType="pd">
+      select
+    bjp.*,bj.id judging_id
+    from BASE_JUDGING_PROCESS bjp
+    left join base_judging bj on bj.JUDGING_CODE=bjp.JUDGING_CODE
+    where bj.id = #{JUDGING_ID} and  bjp.YEAR_NO=to_char(sysdate,'yyyy')
+  </select>
+  <select id="selectByPrimaryKeyThree" parameterType="java.lang.String" resultType="pd">
+    select
+      bjp.*,bj.id judging_id
+    from BASE_JUDGING_PROCESS bjp
+           left join base_judging bj on bj.JUDGING_CODE=bjp.JUDGING_CODE
+    where bj.JUDGING_CODE = #{JUDGING_CODE} and  bjp.YEAR_NO=to_char(sysdate,'yyyy')
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from BASE_JUDGING_PROCESS
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.hz.demo.model.base_judging_process">
+    insert into BASE_JUDGING_PROCESS (ID, JUDGING_CODE, PROCESS_GROUP, 
+      PROCESS_TYPE, PROCESS_STATE, CREATE_TIME,YEAR_NO,PROCESS_PATTERN
+      )
+    values (#{id,jdbcType=DECIMAL}, #{judgingCode,jdbcType=VARCHAR}, #{processGroup,jdbcType=DECIMAL}, 
+      #{processType,jdbcType=DECIMAL}, #{processState,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}
+      , #{yearNo,jdbcType=VARCHAR}, #{processPattern,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hz.demo.model.base_judging_process">
+    insert into BASE_JUDGING_PROCESS
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="judgingCode != null">
+        JUDGING_CODE,
+      </if>
+      <if test="processGroup != null">
+        PROCESS_GROUP,
+      </if>
+      <if test="processType != null">
+        PROCESS_TYPE,
+      </if>
+      <if test="processState != null">
+        PROCESS_STATE,
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME,
+      </if>
+      <if test="yearNo != null">
+        YEAR_NO,
+      </if>
+      <if test="processPattern != null">
+        PROCESS_PATTERN,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="judgingCode != null">
+        #{judgingCode,jdbcType=VARCHAR},
+      </if>
+      <if test="processGroup != null">
+        #{processGroup,jdbcType=DECIMAL},
+      </if>
+      <if test="processType != null">
+        #{processType,jdbcType=DECIMAL},
+      </if>
+      <if test="processState != null">
+        #{processState,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yearNo != null">
+        #{yearNo,jdbcType=VARCHAR},
+      </if>
+      <if test="processPattern != null">
+        #{processPattern,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hz.demo.model.base_judging_process">
+    update BASE_JUDGING_PROCESS
+    <set>
+      <if test="judgingCode != null">
+        JUDGING_CODE = #{judgingCode,jdbcType=VARCHAR},
+      </if>
+      <if test="processGroup != null">
+        PROCESS_GROUP = #{processGroup,jdbcType=DECIMAL},
+      </if>
+      <if test="processType != null">
+        PROCESS_TYPE = #{processType,jdbcType=DECIMAL},
+      </if>
+      <if test="processState != null">
+        PROCESS_STATE = #{processState,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yearNo != null">
+        YEAR_NO=#{yearNo,jdbcType=VARCHAR},
+      </if>
+      <if test="processPattern != null">
+        PROCESS_PATTERN=#{processPattern,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectJudingCode" parameterType="java.lang.String" resultType="Map">
+
+    select JUDGING_CODE ID,JUDGING_NAME TEXT,MANAGE_UNIT PID from BASE_JUDGING
+
+    where MANAGE_UNIT=#{MANAGE_UNIT} and STATE=1 and BACK3=1
+
+  </select>
+  <!--根据条件查询全部记录个数-->
+  <select id="selectProcessTwo" parameterType="pd" resultType="Integer">
+    select count(*) as listcount from BASE_SUBJECT_GROUP
+    where JUDGING_CODE = #{JUDGING_CODE} and YEAR_NO=to_char(sysdate,'yyyy')
+  </select>
+
+  <select id="selectProcessThree" parameterType="java.lang.String" resultType="Integer">
+    select count(*) as listcount from TB_PROPOSER_MSG tpm
+    where tpm.CURRENT_STATE &lt;18 and  tpm.CURRENT_STATE &gt;=15
+    and tpm.BASE_JUDGING_SERIES=#{JUDGING_CODE} and to_char(tpm.REPORT_DATE,'yyyy')=to_char(sysdate,'yyyy')
+  </select>
+
+  <select id="selectProcessFour" parameterType="java.lang.String" resultType="Integer">
+   select count(*) as listcount from TB_PROPOSER_MSG tpm
+    where  tpm.BASE_JUDGING_SERIES=#{JUDGING_CODE}
+    and tpm.user_id not in (
+        select PROPOSER_ID from BASE_PROPOSER_GROUP bp
+        left join BASE_SUBJECT_GROUP bsg on bsg.id=bp.group_id
+        where JUDGING_CODE=#{JUDGING_CODE}
+    ) and tpm.CURRENT_STATE=18 and to_char(tpm.REPORT_DATE,'yyyy')=to_char(sysdate,'yyyy')
+  </select>
+  <select id="selectProcessFive" parameterType="java.lang.String" resultType="pd">
+    select tpm.id,tpm.JUDGING_CODE,tpm.JUDGING_NAME,
+    (select count(*) cou  from BASE_SUBJECT_GROUP bsg
+    left join BASE_SPECIALITY_GROUP bsgr on bsgr.group_id=bsg.id
+    where bsg.JUDGING_CODE=tpm.JUDGING_CODE and bsgr.TYPE=0 and bsg.YEAR_NO=to_char(sysdate,'yyyy')
+    ) zj,
+    (select count(*) from TB_PROPOSER_MSG tt where tt.CURRENT_STATE=18 and tt.BASE_JUDGING_SERIES=tpm.judging_code
+     and to_char(tt.REPORT_DATE,'yyyy')=to_char(sysdate,'yyyy')) sb
+    ,(select count(*) cou  from BASE_SPECIALITY_TICKETS bst
+    inner JOIN BASE_SUBJECT_GROUP bsg on bst.group_id=bsg.id
+    where  bst.type=1 and JUDGING_CODE=tpm.JUDGING_CODE and bsg.YEAR_NO=to_char(sysdate,'yyyy')
+    ) sl
+    from BASE_JUDGING tpm
+    where tpm.JUDGING_CODE=#{JUDGING_CODE}
+
+  </select>
+  <select id="selectProcessSeven" parameterType="java.lang.String" resultType="pd">
+      select tpm.id,tpm.JUDGING_CODE,tpm.JUDGING_NAME,
+    (select count(*) cou  from base_engage ben
+    where ben.JUDGING_CODE=tpm.JUDGING_CODE and ben.TYPE=0
+    ) zj,
+    (select count(*) from TB_PROPOSER_MSG tt where tt.CURRENT_STATE=18 and tt.BASE_JUDGING_SERIES=tpm.judging_code
+     and to_char(tt.REPORT_DATE,'yyyy')=to_char(sysdate,'yyyy')) sb
+    ,(select count(*) cou  from BASE_SPECIALITY_TICKETS bst
+    where  bst.type=2 and bst.group_id=tpm.JUDGING_CODE
+    ) sl
+    from BASE_JUDGING tpm
+    where tpm.JUDGING_CODE=#{JUDGING_CODE}
+  </select>
+</mapper>

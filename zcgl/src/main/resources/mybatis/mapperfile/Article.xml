@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="confing/mappers.Article">
+  <resultMap id="BaseResultMap" type="com.hz.demo.model.Article">
+    <id column="id" jdbcType="DECIMAL" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="text" jdbcType="VARCHAR" property="text" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="user_id" jdbcType="DECIMAL" property="userId" />
+    <result column="type" jdbcType="DECIMAL" property="type" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, text, create_time, user_id, type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultType="pd">
+    select 
+    <include refid="Base_Column_List" />
+    from TB_ARTICLE
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from TB_ARTICLE
+    where id = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.hz.demo.model.Article">
+    insert into TB_ARTICLE (id, title, text, 
+      create_time, user_id, type
+      )
+    values (#{id,jdbcType=DECIMAL}, #{title,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{userId,jdbcType=DECIMAL}, #{type,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="pd">
+    insert into TB_ARTICLE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="text != null">
+        text,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null">
+        #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hz.demo.model.Article">
+    update TB_ARTICLE
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null">
+        text = #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hz.demo.model.Article">
+    update TB_ARTICLE
+    set title = #{title,jdbcType=VARCHAR},
+      text = #{text,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=DECIMAL},
+      type = #{type,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <select id="selectList" parameterType="pd" resultType="pd">
+
+    select ID,TITLE,CREATE_TIME,DISPLAY_NAME,TYPE
+    from
+    (select rownum rn,e.*,users.display_name from
+    (
+    select a.* from tb_article a WHERE 1=1
+    <if test="type != null and type !=''">
+      and a.type =#{type}
+    </if>
+    <if test="title != null and title !=''">
+      and a.title like '%'||#{title}||'%'
+    </if>
+    ORDER by a.create_time DESC ) e
+    left join sys_user users on users.USER_ID=e.user_id
+    <if test="page != null and rows != null">
+      where rownum &lt;=#{rows}*#{page}) b
+      where  rn>(#{page}-1)*#{rows}
+    </if>
+
+  </select>
+
+  <!--根据条件查询全部记录个数-->
+  <select id="selectCount" parameterType="pd" resultType="Integer">
+    select count(*) as listcount from tb_article  WHERE 1=1
+    <if test="type != null and type !=''">
+      and type =#{type}
+    </if>
+    <if test="title != null and title !=''">
+      and title like '%'||#{title}||'%'
+    </if>
+  </select>
+
+</mapper>

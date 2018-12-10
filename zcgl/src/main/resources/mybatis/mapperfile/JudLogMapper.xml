@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="JudLogMapper" >
+  <resultMap id="BaseResultMap" type="judLog" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PRO_ID" property="proId" jdbcType="VARCHAR" />
+    <result column="PRO_RESULT" property="proResult" jdbcType="VARCHAR" />
+    <result column="PRO_VIEW" property="proView" jdbcType="VARCHAR" />
+    <result column="JUD_ID" property="judId" jdbcType="VARCHAR" />
+    <result column="JUD_DATE" property="judDate" jdbcType="TIMESTAMP" />
+    <result column="JUD_STAGE" property="judStage" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PRO_ID, PRO_RESULT, PRO_VIEW, JUD_ID, JUD_DATE, JUD_STAGE
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TB_JUD_LOG
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TB_JUD_LOG
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="pd" >
+    insert into TB_JUD_LOG (ID, PRO_ID, PRO_RESULT, 
+      PRO_VIEW, JUD_ID, JUD_DATE, 
+      JUD_STAGE)
+    values (#{id,jdbcType=VARCHAR}, #{proId,jdbcType=VARCHAR}, #{proResult,jdbcType=VARCHAR}, 
+      #{proView,jdbcType=VARCHAR}, #{judId,jdbcType=VARCHAR}, to_date(#{judDate,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+      #{judStage,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="pd" >
+    insert into TB_JUD_LOG
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="proId != null" >
+        PRO_ID,
+      </if>
+      <if test="proResult != null" >
+        PRO_RESULT,
+      </if>
+      <if test="proView != null" >
+        PRO_VIEW,
+      </if>
+      <if test="judId != null" >
+        JUD_ID,
+      </if>
+      <if test="judDate != null" >
+        JUD_DATE,
+      </if>
+      <if test="judStage != null" >
+        JUD_STAGE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="proId != null" >
+        #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="proResult != null" >
+        #{proResult,jdbcType=VARCHAR},
+      </if>
+      <if test="proView != null" >
+        #{proView,jdbcType=VARCHAR},
+      </if>
+      <if test="judId != null" >
+        #{judId,jdbcType=VARCHAR},
+      </if>
+      <if test="judDate != null" >
+          to_date(#{judDate,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+      </if>
+      <if test="judStage != null" >
+        #{judStage,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pd" >
+    update TB_JUD_LOG
+    <set >
+      <if test="proId != null" >
+        PRO_ID = #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="proResult != null" >
+        PRO_RESULT = #{proResult,jdbcType=VARCHAR},
+      </if>
+      <if test="proView != null" >
+        PRO_VIEW = #{proView,jdbcType=VARCHAR},
+      </if>
+      <if test="judId != null" >
+        JUD_ID = #{judId,jdbcType=VARCHAR},
+      </if>
+      <if test="judDate != null" >
+        JUD_DATE =to_date(#{judDate,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+      </if>
+      <if test="judStage != null" >
+        JUD_STAGE = #{judStage,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pd" >
+    update TB_JUD_LOG
+    set PRO_ID = #{proId,jdbcType=VARCHAR},
+      PRO_RESULT = #{proResult,jdbcType=VARCHAR},
+      PRO_VIEW = #{proView,jdbcType=VARCHAR},
+      JUD_ID = #{judId,jdbcType=VARCHAR},
+      JUD_DATE = to_date(#{judDate,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+      JUD_STAGE = #{judStage,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="getJudLogByProId" parameterType="pd" resultType="java.util.Map">
+      select ID, PRO_ID, PRO_RESULT, PRO_VIEW, JUD_ID,   to_char(JUD_DATE,'yyyy-MM-dd HH24:mi:ss')JUD_DATE, JUD_STAGE,su.DISPLAY_NAME from tb_jud_log tjl
+                                                                                                  LEFT JOIN SYS_USER su on tjl.JUD_ID=su.USER_ID
+      where pro_id=#{proId,jdbcType=VARCHAR} ORDER BY JUD_DATE desc
+    </select>
+
+</mapper>

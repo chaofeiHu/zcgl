@@ -1,0 +1,224 @@
+﻿*
+{
+    font-size: 12px;
+    font-family: Tahoma,Verdana,微软雅黑,新宋体;
+}
+body
+{
+    background: #D2E0F2;
+}
+a
+{
+    color: Black;
+    text-decoration: none;
+}
+a:hover
+{
+    color: Red;
+    text-decoration: none;
+}
+.textbox03
+{
+    border: #878787 1px solid;
+    padding: 4px 3px;
+    font: Verdana, Geneva, sans-serif,宋体;
+    line-height: 14px;
+    background-color: #fff;
+    height: auto;
+    font-size: 14px;
+    font-weight: bold;
+    width: 190px;
+}
+
+.textbox {
+    position: relative;
+    border: 1px solid #D4D4D4;
+    background-color: #fff;
+    vertical-align: middle;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+    width: 174px;
+}
+
+.txt01
+{
+    padding: 3px 2px 2px 2px;
+    border-width: 1px;
+    border-color: #ddd;
+    color: #000;
+    width: 174px;
+}
+input, textarea
+{
+    border: 1px solid #ccc;
+    padding: 2px;
+}
+input[type=checkbox]
+{
+    border: 0px solid #ccc;
+    padding: 2px;
+}
+.txt
+{
+    border: #878787 1px solid;
+    padding: 4px 3px;
+    font: Verdana, Geneva, sans-serif,宋体;
+    line-height: 14px;
+    background-color: #fff;
+    height: auto;
+    font-size: 14px;
+}
+.footer
+{
+    text-align: center;
+    color: #15428B;
+    margin: 0px;
+    padding: 0px;
+    line-height: 23px;
+    font-weight: bold;
+}
+
+.head a
+{
+    color: White;
+    text-decoration: underline;
+}
+
+.easyui-accordion ul
+{
+    list-style-type: none;
+    margin: 0px;
+    padding: 10px;
+}
+.easyui-accordion ul li
+{
+    padding: 0px;
+}
+.easyui-accordion ul li a
+{
+    line-height: 24px;
+}
+.easyui-accordion ul li div
+{
+    margin: 4px 2px;
+    padding-left: 10px;
+    padding-top: 2px;
+    border: 1px dashed #fff;
+}
+.easyui-accordion ul li div.hover
+{
+    border: 1px dashed #99BBE8;
+    background: #E0ECFF;
+    cursor: pointer;
+
+}
+.easyui-accordion ul li div.hover a
+{
+    color: #416AA3;
+
+}
+.easyui-accordion ul li div.selected
+{
+    border: 1px solid #99BBE8;
+    background: #E0ECFF;
+    cursor: default;
+
+}
+.easyui-accordion ul li div.selected a
+{
+    color: #416AA3;
+    font-weight: bold;
+}
+
+
+
+/*.icon
+{
+    background: url(../images/tabicons.png) no-repeat;
+    width: 18px;
+    line-height: 18px;
+    display: inline-block;
+}*/
+.icon-sys
+{
+    background-position: 0px -200px;
+}
+.icon-set
+{
+    background-position: -380px -200px;
+}
+.icon-add
+{
+    background-position: 0px 0px;
+}
+.icon-add1
+{
+  /*  background: url('/icon/edit_add.png') no-repeat;*/
+}
+.icon-nav
+{
+    background-position: -100px -20px;
+}
+.icon-users
+{
+    background-position: -100px -480px;
+}
+.icon-role
+{
+    background-position: -360px -200px;
+}
+.icon-set
+{
+    background-position: -380px -200px;
+}
+.icon-log
+{
+    background-position: -380px -80px;
+}
+.icon-delete16
+{
+    /*background: url('/icon/delete.gif') no-repeat;*/
+    width: 18px;
+    line-height: 18px;
+    display: inline-block;
+}
+.icon-delete
+{
+    background-position: -140px -120px;
+}
+.icon-edit
+{
+
+}
+.icon-magic
+{
+    background-position: 0px -500px;
+}
+.icon-database
+{
+    background-position: -20px -140px;
+}
+.icon-lock{
+    background-position: -40px -140px;
+}
+.icon-unlock{
+    background-position: 0px 0px;
+}
+.icon-expand
+{
+    /*background: url('/images/coll2.gif') no-repeat;*/
+}
+.icon-collapse
+{
+/*    background: url('/images/coll3.gif') no-repeat;*/
+}
+.datagrid-cell
+{
+    overflow:visible;
+}

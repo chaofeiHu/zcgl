@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="confing/mappers.rec_certificate" >
+  <resultMap id="BaseResultMap" type="com.hz.demo.model.rec_certificate" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="RESULTID" property="resultid" jdbcType="DECIMAL" />
+    <result column="CERTIFICATE_NUMBER" property="certificateNumber" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_PATH" property="certificatePath" jdbcType="VARCHAR" />
+    <result column="ADDTIME" property="addtime" jdbcType="TIMESTAMP" />
+    <result column="BACK1" property="back1" jdbcType="VARCHAR" />
+    <result column="BACK2" property="back2" jdbcType="VARCHAR" />
+    <result column="BACK3" property="back3" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap1" type="com.hz.demo.model.rec_certificate" >
+    <id column="ID" property="id" jdbcType="DECIMAL" />
+    <result column="RESULTID" property="resultid" jdbcType="DECIMAL" />
+    <result column="CERTIFICATE_NUMBER" property="certificateNumber" jdbcType="VARCHAR" />
+    <result column="CERTIFICATE_PATH" property="certificatePath" jdbcType="VARCHAR" />
+    <result column="ADDTIME" property="addtime" jdbcType="TIMESTAMP" />
+    <result column="BACK1" property="back1" jdbcType="VARCHAR" />
+    <result column="BACK2" property="back2" jdbcType="VARCHAR" />
+    <result column="BACK3" property="back3" jdbcType="VARCHAR" />
+    <association property="recResult" select="confing/mappers.rec_result.selectByPrimaryKey" column="resultid">
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, RESULTID, CERTIFICATE_NUMBER, CERTIFICATE_PATH, ADDTIME, BACK1, BACK2, BACK3
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+    select 
+    <include refid="Base_Column_List" />
+    from REC_CERTIFICATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <select id="selectByPrimaryKey1" resultMap="BaseResultMap1" parameterType="java.math.BigDecimal" >
+    select
+    <include refid="Base_Column_List" />
+    from REC_CERTIFICATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal" >
+    delete from REC_CERTIFICATE
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insertSelective" parameterType="com.hz.demo.model.rec_certificate" >
+    insert into REC_CERTIFICATE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="resultid != null" >
+        RESULTID,
+      </if>
+      <if test="certificateNumber != null" >
+        CERTIFICATE_NUMBER,
+      </if>
+      <if test="certificatePath != null" >
+        CERTIFICATE_PATH,
+      </if>
+      <if test="addtime != null" >
+        ADDTIME,
+      </if>
+      <if test="back1 != null" >
+        BACK1,
+      </if>
+      <if test="back2 != null" >
+        BACK2,
+      </if>
+      <if test="back3 != null" >
+        BACK3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="resultid != null" >
+        #{resultid,jdbcType=DECIMAL},
+      </if>
+      <if test="certificateNumber != null" >
+        #{certificateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="certificatePath != null" >
+        #{certificatePath,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        to_date(#{addtime,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+      </if>
+      <if test="back1 != null" >
+        #{back1,jdbcType=VARCHAR},
+      </if>
+      <if test="back2 != null" >
+        #{back2,jdbcType=VARCHAR},
+      </if>
+      <if test="back3 != null" >
+        #{back3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hz.demo.model.rec_certificate" >
+    update REC_CERTIFICATE
+    <set >
+      <if test="resultid != null" >
+        RESULTID = #{resultid,jdbcType=DECIMAL},
+      </if>
+      <if test="certificateNumber != null" >
+        CERTIFICATE_NUMBER = #{certificateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="certificatePath != null" >
+        CERTIFICATE_PATH = #{certificatePath,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        ADDTIME =to_date(#{addtime,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+      </if>
+      <if test="back1 != null" >
+        BACK1 = #{back1,jdbcType=VARCHAR},
+      </if>
+      <if test="back2 != null" >
+        BACK2 = #{back2,jdbcType=VARCHAR},
+      </if>
+      <if test="back3 != null" >
+        BACK3 = #{back3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectList" parameterType="pd" resultMap="BaseResultMap1">
+    select *
+    from
+    (select rownum rn,e.* from
+    (select * from REC_CERTIFICATE)e
+    <if test="page != null and rows != null">
+      where rownum &lt;=#{rows}*#{page})
+      where  rn>(#{page}-1)*#{rows}
+    </if>
+  </select>
+  <select id="selectCount" parameterType="pd" resultType="java.lang.Integer">
+    select count(e.*) from
+    (select * from REC_CERTIFICATE)e
+  </select>
+
+  <!--查序列-->
+  <select id="selectSeqZhengGao" resultType="java.lang.Integer">
+    SELECT SEQ_ZHENG_GAO_JI.NEXTVAL from dual
+  </select>
+  <select id="selectSeqFuGao" resultType="java.lang.Integer">
+    SELECT SEQ_FU_GAO_JI.NEXTVAL from dual
+  </select>
+  <select id="selectSeqZhong" resultType="java.lang.Integer">
+    SELECT SEQ_ZHONG_JI.NEXTVAL from dual
+  </select>
+  <select id="selectSeqZhuLi" resultType="java.lang.Integer">
+    SELECT SEQ_ZHU_LI_JI.NEXTVAL from dual
+  </select>
+  <select id="selectSeqYuan" resultType="java.lang.Integer">
+    SELECT SEQ_Yuan_JI.NEXTVAL from dual
+  </select>
+  <!--查序列end-->
+    <!--根据结果id查证书-->
+    <select id="getModelByResultid" resultMap="BaseResultMap" parameterType="java.math.BigDecimal" >
+        select
+        <include refid="Base_Column_List" />
+        from REC_CERTIFICATE
+        where RESULTID = #{id,jdbcType=DECIMAL}
+    </select>
+</mapper>

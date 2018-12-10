@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="confing/mappers.reprot">
+
+  <!--根据条件查询全部记录个数-->
+  <select id="selectCount" parameterType="pd" resultType="Integer">
+    select count(*) as listcount from tb_article  WHERE 1=1
+    <if test="type != null and type !=''">
+      and type =#{type}
+    </if>
+    <if test="title != null and title !=''">
+      and title like '%'||#{title}||'%'
+    </if>
+  </select>
+  <!-- 评审情况统计表  学科组通过率-->
+  <select id="assessmentStatisticsList" parameterType="pd" resultType="pd">
+    select bsp.PROFESSIAL_CODE,bsp.PROFESSIAL_NAME,bj.JUDGING_CODE,bj.id judging_id
+    ,(select count(*) from TB_PROPOSER_MSG tpm where tpm.SHENBAOMAJOR_ID=bsp.PROFESSIAL_CODE and tpm.BASE_JUDGING_SERIES=bj.judging_code  AND to_char(tpm.REPORT_DATE,'yyyy') =#{YEAR_NO}) zs,
+    (select count(*) from TB_PROPOSER_MSG tpm
+        inner JOIN REC_REVIEWRESULT rrv on rrv.JUDGING_CODE=tpm.BASE_JUDGING_SERIES
+         where MAJOR=bsp.PROFESSIAL_CODE and tpm.BASE_JUDGING_SERIES=bj.judging_code and rrv.YEAR_NO = #{YEAR_NO} ) tgs
+    from BASE_SERIES_PROFESSIAL bsp
+    LEFT JOIN BASE_JUDGING_SERIES bjs on bsp.PROFESSIAL_CODE=bjs.REVIEW_PROFESSIAL
+    LEFT JOIN BASE_JUDGING bj on bj.judging_code=bjs.judging_code
+    where bj.JUDGING_CODE=#{JUDGING_CODE}
+  </select>
+  <!-- 评审情况统计表  学科组职称等级申请人数-->
+  <select id="assessmentStatisticsLevelList" parameterType="pd" resultType="pd">
+    select count(*) cou,sd.BACKUP2,tpm.PINGSHENTYPE from TB_PROPOSER_MSG tpm
+    left join SYS_DICT sd on sd.dict_code=tpm.PROPOSE_POSITION and sd.group_name='POSITIONAL_TITLES'
+    where tpm.BASE_JUDGING_SERIES=#{JUDGING_CODE}  and tpm.SHENBAOMAJOR_ID=#{PROFESSIAL_CODE}  AND to_char(tpm.REPORT_DATE,'yyyy') =#{YEAR_NO}
+    group by sd.BACKUP2,tpm.PINGSHENTYPE
+  </select>
+  <!-- 评审情况统计表  学科组职称等级通过人数-->
+  <select id="assessmentLevelList" parameterType="pd" resultType="pd">
+   SELECT
+			count( * )cou,sd.BACKUP2,tpm.PINGSHENTYPE
+	FROM
+		TB_PROPOSER_MSG tpm
+		INNER JOIN REC_REVIEWRESULT rrv ON rrv.JUDGING_CODE = tpm.BASE_JUDGING_SERIES
+		inner join SYS_DICT sd on sd.dict_code=tpm.PROPOSE_POSITION and sd.group_name='POSITIONAL_TITLES'
+	WHERE
+		tpm.MAJOR = #{PROFESSIAL_CODE}
+		AND tpm.BASE_JUDGING_SERIES =#{JUDGING_CODE}
+		AND rrv.YEAR_NO = #{YEAR_NO}
+		group by sd.BACKUP2,tpm.PINGSHENTYPE
+  </select>
+    <!--系列级别-->
+    <select id="selectSerieslevel" resultType="pd" parameterType="pd">
+        select count(*) cou,sd.dict_name xl,sd2.dict_name jb from TB_PROPOSER_MSG tpm
+        LEFT JOIN BASE_PROPOSER bp on bp.id=tpm.user_id
+        LEFT JOIN SYS_DICT sd on sd.dict_code=tpm.REVIEW_SERIES and sd.group_name='REVIEW_SERIES'
+        left join sys_dict sd1 on sd1.dict_code=tpm.PROPOSE_POSITION and sd1.group_name='POSITIONAL_TITLES'
+        left join sys_dict sd2 on sd2.dict_code=sd1.backup2 and sd2.group_name='TITLE_LEVEL'
+        where tpm.PROGRESS=1
+        <if test="YEAR_NO!='' and YEAR_NO!=null">
+            and extract(year from tpm.REPORT_DATE)=#{YEAR_NO}
+        </if>
+        and bp.DECLARE_UNITCODE in(
+            select unit_code from BASE_UNIT
+            where (PARENTUNIT_CODE=#{UNIT_CODE} or unit_code=#{UNIT_CODE})
+        )
+        group by sd.dict_name,sd2.dict_name,sd2.dict_code
+        order by sd2.dict_code
+    </select>
+
+    <!--学历级别-->
+    <select id="selectEducationLevel" resultType="pd" parameterType="pd">
+        select count(*) cou,sd.dict_name xl,sd2.dict_name jb from TB_PROPOSER_MSG tpm
+        LEFT JOIN BASE_PROPOSER bp on bp.id=tpm.user_id
+        LEFT JOIN SYS_DICT sd on sd.dict_code=tpm.EDU_EDU and sd.group_name='EDU_EDU'
+        left join sys_dict sd1 on sd1.dict_code=tpm.PROPOSE_POSITION and sd1.group_name='POSITIONAL_TITLES'
+        left join sys_dict sd2 on sd2.dict_code=sd1.backup2 and sd2.group_name='TITLE_LEVEL'
+        where tpm.PROGRESS=1
+        <if test="YEAR_NO!='' and YEAR_NO!=null">
+            and extract(year from tpm.REPORT_DATE)=#{YEAR_NO}
+        </if>
+        and bp.DECLARE_UNITCODE in(
+            select unit_code from BASE_UNIT
+            where (PARENTUNIT_CODE=#{UNIT_CODE} or unit_code=#{UNIT_CODE})
+        )
+        group by sd.dict_name,sd2.dict_name,sd2.dict_code
+        order by sd2.dict_code
+    </select>
+
+    <!--单位级别-->
+    <select id="selectCompanyLevel" resultType="pd" parameterType="pd">
+        select count(*) cou,but.UNIT_NAME xl,sd2.dict_name jb from TB_PROPOSER_MSG tpm
+        LEFT JOIN BASE_PROPOSER bp on bp.id=tpm.user_id
+        left join sys_dict sd1 on sd1.dict_code=tpm.PROPOSE_POSITION and sd1.group_name='POSITIONAL_TITLES'
+        left join sys_dict sd2 on sd2.dict_code=sd1.backup2 and sd2.group_name='TITLE_LEVEL'
+        LEFT JOIN BASE_UNIT but on but.unit_code=bp.DECLARE_UNITCODE
+        where tpm.PROGRESS=1
+        <if test="YEAR_NO!='' and YEAR_NO!=null">
+            and extract(year from tpm.REPORT_DATE)=#{YEAR_NO}
+        </if>
+        and bp.DECLARE_UNITCODE in(
+            select unit_code from BASE_UNIT
+            where ( PARENTUNIT_CODE= #{UNIT_CODE} or unit_code= #{UNIT_CODE} )
+        )
+        group by but.UNIT_NAME,sd2.dict_name,sd2.dict_code
+        order by sd2.dict_code
+    </select>
+    <!--单位系列-->
+    <select id="selectCompanySeries" resultType="pd" parameterType="pd">
+        select count(*) cou,but.UNIT_NAME xl,sd2.dict_name jb from TB_PROPOSER_MSG tpm
+        LEFT JOIN BASE_PROPOSER bp on bp.id=tpm.user_id
+        LEFT JOIN SYS_DICT sd2 on sd2.dict_code=tpm.REVIEW_SERIES and sd2.group_name='REVIEW_SERIES'
+        LEFT JOIN BASE_UNIT but on but.unit_code=bp.DECLARE_UNITCODE
+        where tpm.PROGRESS=1
+        <if test="YEAR_NO!='' and YEAR_NO!=null">
+            and extract(year from tpm.REPORT_DATE)=#{YEAR_NO}
+        </if>
+        and bp.DECLARE_UNITCODE in(
+        select unit_code from BASE_UNIT
+        where ( PARENTUNIT_CODE= #{UNIT_CODE} or unit_code= #{UNIT_CODE} )
+        )
+        group by but.UNIT_NAME,sd2.dict_name,sd2.dict_code
+        order by sd2.dict_code
+    </select>
+
+    <select id="assessmentInformationlistPage" resultType="pd" parameterType="page">
+        select unit.UNIT_NAME,bp.DISPLAY_NAME,bp.ID_CARD_NO,bj.JUDGING_NAME
+        ,xl.dict_name xl_name,zc.dict_name zc_name,jb.dict_name jb_name,
+        zy.PROFESSIAL_NAME,pslx.dict_name pslx_name,bsg.group_name,
+        rrs.GROUP_RESULT_YES,
+        rrs.GROUP_RESULT_NO,
+        rrs.GROUP_RESULT_WAIVE,
+        rrs.GROUP_RESULT_OPINION,
+        NVL(rrs.GROUP_RESULT,0) GROUP_RESULT,
+        rrs.REVIEW_RESULT_YES,
+        rrs.REVIEW_RESULT_NO,
+        rrs.REVIEW_RESULT_WAIVE,
+        rrs.REVIEW_RESULT_OPINION,
+        NVL(rrs.REVIEW_RESULT,0) REVIEW_RESULT,
+        tpm.FRISTEDUCATION,
+        tpm.MAXEDUCATION,
+        to_char(tpm.MAXEDUCATIONTIME,'yyyy-mm-dd') MAXEDUCATIONTIME,
+         to_char(tpm.STARTWORKTIME,'yyyy-mm-dd') STARTWORKTIME,
+        tpm.NOWJOB
+        from TB_PROPOSER_MSG tpm
+        inner JOIN BASE_PROPOSER bp on bp.id =tpm.user_id
+        LEFT JOIN base_unit unit on unit.unit_code=bp.DECLARE_UNITCODE
+        LEFT JOIN BASE_JUDGING bj on bj.judging_code=tpm.BASE_JUDGING_SERIES
+        LEFT JOIN SYS_DICT xl on xl.dict_code=tpm.REVIEW_SERIES and xl.group_name='REVIEW_SERIES'
+        LEFT JOIN sys_dict zc on zc.dict_code=tpm.PROPOSE_POSITION and zc.group_name='POSITIONAL_TITLES'
+        LEFT JOIN sys_dict jb on jb.dict_code=zc.BACKUP2 and jb.group_name='TITLE_LEVEL'
+        LEFT JOIN BASE_SERIES_PROFESSIAL zy on zy.PROFESSIAL_CODE=tpm.SHENBAOMAJOR_ID
+        LEFT JOIN sys_dict pslx on pslx.dict_code=tpm.PINGSHENTYPE and pslx.group_name='REVIEW_TYPE'
+        LEFT JOIN BASE_PROPOSER_GROUP bpg on bpg.PROPOSER_ID=bp.id
+        left join BASE_SUBJECT_GROUP bsg on bsg.ID=bpg.GROUP_ID
+        LEFT JOIN REC_REVIEWRESULT rrs on rrs.USER_ID=bp.id
+        where bp.state=1
+        <if test="pd.UNIT_NAME!='' and pd.UNIT_NAME!=null">
+            and unit.UNIT_NAME like '%'||#{pd.UNIT_NAME}||'%'
+        </if>
+        <if test="pd.DISPLAY_NAME!=''  and pd.DISPLAY_NAME!=null">
+            and bp.DISPLAY_NAME like '%'||#{pd.DISPLAY_NAME}||'%'
+        </if>
+        <if test="pd.JUDGING_CODE!=''  and pd.JUDGING_CODE!=null">
+            and bj.JUDGING_CODE=#{pd.JUDGING_CODE}
+        </if>
+        <if test="pd.XL_NAME!=''  and pd.XL_NAME!=null">
+            and xl.DICT_CODE=#{pd.XL_NAME}
+        </if>
+        <if test="pd.JB_NAME!=''  and pd.JB_NAME!=null">
+            and jb.DICT_CODE =#{pd.JB_NAME}
+        </if>
+    </select>
+
+</mapper>

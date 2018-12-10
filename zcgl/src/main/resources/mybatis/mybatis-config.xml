@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD SQL Map Config 3.0//EN"  
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<settings> 
+        <setting name="cacheEnabled" value="true" /><!-- 全局映射器启用缓存 -->   
+        <setting name="useGeneratedKeys" value="true" /> 
+        <setting name="defaultExecutorType" value="REUSE" /> 
+    </settings>
+    
+    <typeAliases>
+        <typeAlias type="com.hz.demo.core.PageData" alias="pd"/>
+        <typeAlias type="com.hz.demo.core.Tree" alias="tree"/>
+        <typeAlias type="com.hz.demo.model.sys_dept" alias="confing/mappers.sys_dept"/>
+        <typeAlias type="com.hz.demo.model.base_unit" alias="confing/mappers.base_unit"/>
+        <typeAlias type="com.hz.demo.model.sys_area" alias="confing/mappers.sys_area"/>
+        <typeAlias type="com.hz.demo.model.sys_dict" alias="confing/mappers.sys_dict"/>
+        <typeAlias type="com.hz.demo.model.sys_log" alias="confing/mappers.sys_log"/>
+        <typeAlias type="com.hz.demo.model.sys_menu" alias="confing/mappers.sys_menu"/>
+        <typeAlias type="com.hz.demo.model.sys_menufun" alias="confing/mappers.sys_menufun"/>
+        <typeAlias type="com.hz.demo.model.sys_role" alias="confing/mappers.sys_role"/>
+        <typeAlias type="com.hz.demo.model.sys_rolemenufun" alias="confing/mappers.sys_rolemenufun"/>
+        <typeAlias type="com.hz.demo.model.sys_token" alias="confing/mappers.sys_token"/>
+        <typeAlias type="com.hz.demo.model.sys_user" alias="confing/mappers.sys_user"/>
+        <typeAlias type="com.hz.demo.model.sys_userrole" alias="confing/mappers.sys_userrole"/>
+        <typeAlias type="com.hz.demo.model.base_proposer" alias="confing/mappers.base_proposer"/>
+        <typeAlias type="com.hz.demo.model.base_professial" alias="confing/mappers.base_professial"/>
+        <typeAlias type="com.hz.demo.model.base_judging" alias="confing/mappers.base_judging"/>
+        <typeAlias type="com.hz.demo.model.base_judging_series" alias="confing/mappers.base_judging_series"/>
+        <typeAlias type="com.hz.demo.model.base_param_declare" alias="confing/mappers.base_param_declare"/>
+        <typeAlias type="com.hz.demo.model.base_param_review" alias="confing/mappers.base_param_review"/>
+        <typeAlias type="com.hz.demo.model.sys_rolegroup" alias="confing/mappers.sys_rolegroup"/>
+        <typeAlias type="com.hz.demo.model.Article" alias="confing/mappers.Article"/>
+        <typeAlias type="com.hz.demo.model.BaseStamp" alias="confing/mappers.BaseStamp"/>
+        <!-- 分页 -->
+        <typeAlias type="com.hz.demo.core.Page" alias="Page"/>
+        <package name="com.hz.demo.model.shenbao"/>
+    </typeAliases>
+    <plugins>
+        <plugin interceptor="com.hz.demo.core.PagePlugin">
+            <property name="dialect" value="oracle"/>
+            <property name="pageSqlId" value=".*listPage.*"/>
+        </plugin>
+    </plugins>
+</configuration>

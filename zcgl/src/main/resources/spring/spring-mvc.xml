@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.2.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 启用注解 -->
+	<mvc:annotation-driven/>
+	<!-- 启用事务注解-->
+	<tx:annotation-driven />
+	<!--配置定时器 每隔5秒执行一次-->
+	<!--
+	<bean id="PushController" class="com.hz.demo.controller.PushController"></bean>
+	<task:scheduled-tasks>
+		<task:scheduled ref="PushController" method="pushOrder" cron="0/30 * * * * ?"/>
+	</task:scheduled-tasks>
+	-->
+	<context:property-placeholder
+			location="classpath:config/dbconfig.properties"
+			ignore-unresolvable="true" />
+	<!--避免IE执行ajax时，返回json数据出现下载-->
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+						<value>text/json;charset=UTF-8</value>
+						<value>application/json;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!--不拦截静态资源-->
+    <mvc:resources location="/static/" mapping="/static/**/"></mvc:resources>
+	<mvc:resources location="/upload/" mapping="/upload/**/"></mvc:resources>
+
+	<!-- 自动扫描：使SpringMVC认为该包下用了@Controller注解类型的控制器 -->
+	<context:component-scan base-package="com.hz.demo.controller" />
+
+    <!-- 访问拦截器 
+    <mvc:interceptors>
+       <mvc:interceptor>
+          <mvc:mapping path="/**/**"/>
+          <bean class="com.yutu.interceptor.LoginHandlerInterceptor"/>
+       </mvc:interceptor>
+    </mvc:interceptors>-->
+
+	<!--强制登录-->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/**/fonts/*"/>
+			<mvc:exclude-mapping path="/**/*.css"/>
+			<mvc:exclude-mapping path="/**/*.js"/>
+			<mvc:exclude-mapping path="/**/*.png"/>
+			<mvc:exclude-mapping path="/**/*.gif"/>
+			<mvc:exclude-mapping path="/**/*.jpg"/>
+			<mvc:exclude-mapping path="/**/*.jpeg"/>
+			<mvc:exclude-mapping path="/**/*login*"/>
+			<mvc:exclude-mapping path="/**/*getKaptcha*"/>
+			<mvc:exclude-mapping path="/**/*baseLogin*"/>
+			<bean class="com.hz.demo.core.LoginInterceptor"/>
+		</mvc:interceptor>
+		<mvc:interceptor>
+		<mvc:mapping path="/**"/>
+		<bean class="com.hz.demo.core.SpecialityProcessInterceptor"/>
+	</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- 配置SpringMVC的视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 配置文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 默认编码 -->
+		<property name="defaultEncoding" value="utf-8" />
+		<!-- 文件大小最大值 -->
+		<property name="maxUploadSize" value="10485760000" />
+		<!-- 内存中的最大值 -->
+		<property name="maxInMemorySize" value="40960" />
+	</bean>
+
+	<!--验证码-->
+	<bean id="config" class="com.google.code.kaptcha.util.Config">
+		<!-- 因为config类没有无参构造方法所以必须通过有参创建对象 -->
+		<constructor-arg>
+			<props>
+				<prop key="kaptcha.textproducer.char.length">4</prop>
+				<prop key="kaptcha.textproducer.font.color">red</prop>
+				<prop key="kaptcha.textproducer.font.size">45</prop>
+				<prop key="kaptcha.textproducer.char.space">8</prop>
+				<prop key="kaptcha.image.height">60</prop>
+				<prop key="kaptcha.textproducer.font.names">Courier</prop>
+			</props>
+		</constructor-arg>
+	</bean>
+
+	<bean class="com.google.code.kaptcha.impl.DefaultKaptcha">
+		<property name="config" ref="config"></property>
+	</bean>
+</beans>

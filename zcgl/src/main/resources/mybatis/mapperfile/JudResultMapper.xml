@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="JudResultMapper" >
+  <resultMap id="BaseResultMap" type="judResult" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="PRO_ID" property="proId" jdbcType="VARCHAR" />
+    <result column="JUD_RESULT" property="judResult" jdbcType="VARCHAR" />
+    <result column="JUD_VIEW" property="judView" jdbcType="VARCHAR" />
+    <result column="JUD_STAGE" property="judStage" jdbcType="VARCHAR" />
+    <result column="JUD_CONTENT" property="judContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, PRO_ID, JUD_RESULT, JUD_VIEW, JUD_STAGE, JUD_CONTENT
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from TB_JUD_RESULT
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from TB_JUD_RESULT
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="pd" >
+    insert into TB_JUD_RESULT (ID, PRO_ID, JUD_RESULT, 
+      JUD_VIEW, JUD_STAGE, JUD_CONTENT
+      )
+    values (#{id,jdbcType=VARCHAR}, #{proId,jdbcType=VARCHAR}, #{judResult,jdbcType=VARCHAR}, 
+      #{judView,jdbcType=VARCHAR}, #{judStage,jdbcType=VARCHAR}, #{judContent,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="pd" >
+    insert into TB_JUD_RESULT
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="proId != null" >
+        PRO_ID,
+      </if>
+      <if test="judResult != null" >
+        JUD_RESULT,
+      </if>
+      <if test="judView != null" >
+        JUD_VIEW,
+      </if>
+      <if test="judStage != null" >
+        JUD_STAGE,
+      </if>
+      <if test="judContent != null" >
+        JUD_CONTENT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="proId != null" >
+        #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="judResult != null" >
+        #{judResult,jdbcType=VARCHAR},
+      </if>
+      <if test="judView != null" >
+        #{judView,jdbcType=VARCHAR},
+      </if>
+      <if test="judStage != null" >
+        #{judStage,jdbcType=VARCHAR},
+      </if>
+      <if test="judContent != null" >
+        #{judContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pd" >
+    update TB_JUD_RESULT
+    <set >
+      <if test="proId != null" >
+        PRO_ID = #{proId,jdbcType=VARCHAR},
+      </if>
+      <if test="judResult != null" >
+        JUD_RESULT = #{judResult,jdbcType=VARCHAR},
+      </if>
+      <if test="judView != null" >
+        JUD_VIEW = #{judView,jdbcType=VARCHAR},
+      </if>
+      <if test="judStage != null" >
+        JUD_STAGE = #{judStage,jdbcType=VARCHAR},
+      </if>
+      <if test="judContent != null" >
+        JUD_CONTENT = #{judContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="pd" >
+    update TB_JUD_RESULT
+    set PRO_ID = #{proId,jdbcType=VARCHAR},
+      JUD_RESULT = #{judResult,jdbcType=VARCHAR},
+      JUD_VIEW = #{judView,jdbcType=VARCHAR},
+      JUD_STAGE = #{judStage,jdbcType=VARCHAR},
+      JUD_CONTENT = #{judContent,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!--通过评审阶段 申报内容和申报人id删除审批结果-->
+  <delete id="deleteByProIdAndJudStage" parameterType="pd">
+    delete from tb_jud_result where pro_id=#{proId} and jud_stage=#{judStage} and JUD_CONTENT=#{judContent}
+  </delete>
+
+  <!--通过评审阶段和申报人id获取审批结果-->
+  <select id="getJudResultByProIdAndJudStage" parameterType="pd" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List"/> from tb_jud_result where pro_id=#{proId} and jud_stage=#{judStage}
+  </select>
+
+  <!--通过评审阶段和申报人id获取退回结果-->
+  <select id="getJudResultTuiHui" parameterType="pd" resultType="java.util.Map" >
+    select id,JUD_VIEW,JUD_CONTENT,sd.DICT_NAME as "JUD_CONTENT_NAME" from tb_jud_result tjr
+    left join SYS_DICT sd on tjr.JUD_CONTENT=sd.DICT_CODE and sd.GROUP_NAME='JUDGING_CONTENT'
+    where pro_id=#{proId} and jud_stage=#{judStage} and JUD_RESULT=#{judResult} and JUD_CONTENT!='99'
+  </select>
+
+
+
+</mapper>

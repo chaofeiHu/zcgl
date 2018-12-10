@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="confing/mappers.base_speciality_notice">
+  <resultMap id="BaseResultMap" type="com.hz.demo.model.base_speciality_notice">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="TYPE" jdbcType="DECIMAL" property="type" />
+    <result column="REASON" jdbcType="VARCHAR" property="reason" />
+    <result column="DIRECTOR" jdbcType="DECIMAL" property="director" />
+    <result column="GROUP_ID" jdbcType="VARCHAR" property="groupId" />
+    <result column="PERSONAL_NUMBER" jdbcType="VARCHAR" property="personalNumber" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, TYPE, REASON, DIRECTOR, PERSONAL_NUMBER
+  </sql>
+
+  <select id="selectByPrimaryKey"  parameterType="pd" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_SPECIALITY_NOTICE
+    where PERSONAL_NUMBER=#{PERSONAL_NUMBER} and GROUP_ID=#{GROUP_ID}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.hz.demo.model.base_speciality_notice">
+    insert into BASE_SPECIALITY_NOTICE
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="reason != null">
+        REASON,
+      </if>
+      <if test="director != null">
+        DIRECTOR,
+      </if>
+      <if test="personalNumber != null">
+        PERSONAL_NUMBER,
+      </if>
+      <if test="groupId != null">
+        GROUP_ID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=DECIMAL},
+      </if>
+      <if test="reason != null">
+        #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="director != null">
+        #{director,jdbcType=DECIMAL},
+      </if>
+      <if test="personalNumber != null">
+        #{personalNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        #{groupId}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hz.demo.model.base_speciality_notice">
+    update BASE_SPECIALITY_NOTICE
+    <set>
+      <if test="type != null">
+        TYPE = #{type,jdbcType=DECIMAL},
+      </if>
+      <if test="reason != null">
+        REASON = #{reason,jdbcType=VARCHAR},
+      </if>
+      <if test="director != null">
+        DIRECTOR = #{director,jdbcType=DECIMAL},
+      </if>
+      <if test="personalNumber != null">
+        PERSONAL_NUMBER = #{personalNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null">
+        GROUP_ID = #{groupId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateNotice" parameterType="pd">
+    update BASE_SPECIALITY_NOTICE
+    set
+       DIRECTOR=1
+    where GROUP_ID=#{GROUP_ID} and PERSONAL_NUMBER!=#{PERSONAL_NUMBER}
+  </update>
+  <update id="updateNoticetwo" parameterType="pd">
+    update BASE_SPECIALITY_NOTICE
+    set
+       DIRECTOR=0
+    where GROUP_ID=#{GROUP_ID} and PERSONAL_NUMBER=#{PERSONAL_NUMBER}
+  </update>
+<!-- 根据评委会编号查找信息 -->
+  <select id="selectSpeciality" parameterType="pd" resultType="pd">
+    select * from ( select rownum rn,e.* from( select BGR.id,BGR.GROUP_NO,bgr.GROUP_NAME,BGR.YEAR_NO,
+        (select count(*) from BASE_SPECIALITY_GROUP bsg where bgr.id=bsg.GROUP_ID) as nu,
+        (select count(*) from BASE_SPECIALITY_NOTICE bsg where bgr.id=bsg.GROUP_ID and bsg.type=0) as nus,sd.dict_name
+      from BASE_SUBJECT_GROUP bgr
+      LEFT JOIN BASE_JUDGING bj on bj.JUDGING_CODE=bgr.JUDGING_CODE
+      LEFT JOIN SYS_DICT sd on sd.dict_code=bj.JURY_LEVEL and sd.group_name='JURY_LEVEL'
+      where BGR.JUDGING_CODE=#{JUDGING_CODE}
+      ) e
+    <if test="page != null and rows != null">
+      where rownum &lt;=#{rows}*#{page}) f
+      where  rn>(#{page}-1)*#{rows}
+    </if>
+  </select>
+
+  <select id="selectCount" parameterType="pd" resultType="Integer">
+      select  count(*) as listcount
+      from BASE_SUBJECT_GROUP bgr
+      LEFT JOIN BASE_JUDGING bj on bj.JUDGING_CODE=bgr.JUDGING_CODE
+      where BGR.JUDGING_CODE=#{JUDGING_CODE}
+  </select>
+
+  <!--获取各个评委会学科组各个职称人数-->
+  <select id="selectListSenior" resultType="pd" parameterType="pd">
+      SELECT COUNT (*) shu,TPM.BASE_JUDGING_SERIES,sd2.dict_name dictName
+	  FROM
+              TB_PROPOSER_MSG tpm
+      LEFT JOIN SYS_DICT sd ON sd.dict_code = tpm.POSITION AND sd.group_name = 'POSITIONAL_TITLES'
+      LEFT JOIN SYS_DICT sd2 ON sd2.dict_code = sd.BACKUP2 AND sd2.group_name = 'TITLE_LEVEL'
+      LEFT JOIN BASE_PROPOSER_GROUP bsgr ON bsgr.PROPOSER_ID = tpm.user_id
+	  WHERE
+	  	TPM.BASE_JUDGING_SERIES =#{JUDGING_CODE} and tpm.current_state='18' and bsgr.group_id=#{ID}
+	   	GROUP BY TPM.BASE_JUDGING_SERIES ,sd2.dict_name
+  </select>
+  
+    <!--查询专家信息-->
+    <select id="findSpeciality" parameterType="pd" resultType="pd">
+      select * from ( select rownum rn,e.* from(
+        select BS.SPECIALITY_NAME,bs.NOWUNIT,bsgr.GROUP_NAME,bj.judging_code,syu.login_name,sys2.dict_name,BS.PROFESSIAL_LEVEL,
+      bs.PERSONAL_NUMBER,bsg.GROUP_ID,bsn.DIRECTOR
+      from BASE_SPECIALITY bs
+      LEFT JOIN BASE_SPECIALITY_GROUP bsg on BSG.SPECIALITY_ID=BS.id
+      LEFT JOIN BASE_SUBJECT_GROUP bsgr on bsgr.id=bsg.GROUP_ID
+      left join BASE_JUDGING bj on bj.judging_code=bsgr.judging_code
+      LEFT JOIN SYS_USER syu on syu.user_id=bs.PERSONAL_NUMBER
+      LEFT JOIN BASE_SPECIALITY_NOTICE bsn on bsn.PERSONAL_NUMBER=bs.PERSONAL_NUMBER and bsn.GROUP_ID=bsgr.id
+      LEFT JOIN sys_dict sys2 on sys2.dict_code=bs.ADMINISTRATIVE_DUTY_LEVEL and sys2.group_name='ADMINISTRATIVE_DUTY_LEVEL'
+      where bj.judging_code=#{JUDGING_CODE}
+      <if test="SPECIALITY_NAME != null and SPECIALITY_NAME != ''">
+        and bs.SPECIALITY_NAME like '%'||#{SPECIALITY_NAME}||'%'
+      </if>
+      <if test="NOWUNIT != null and NOWUNIT != ''">
+        and bs.NOWUNIT like '%'||#{NOWUNIT}||'%'
+      </if>
+      <if test="xkz != null and xkz != ''">
+          and bsgr.id=#{xkz}
+      </if>
+        ) e
+        <if test="page != null and rows != null">
+            where rownum &lt;=#{rows}*#{page}) f
+            where  rn>(#{page}-1)*#{rows}
+        </if>
+  </select>
+    <select id="findSpecialityCount" parameterType="pd" resultType="Integer">
+      select  count(*) as listcount
+      from BASE_SPECIALITY bs
+      LEFT JOIN BASE_SPECIALITY_GROUP bsg on BSG.SPECIALITY_ID=BS.id
+      LEFT JOIN BASE_SUBJECT_GROUP bsgr on bsgr.id=bsg.GROUP_ID
+      left join BASE_JUDGING bj on bj.judging_code=bsgr.judging_code
+      LEFT JOIN SYS_USER syu on syu.user_id=bs.PERSONAL_NUMBER
+      LEFT JOIN sys_dict sys2 on sys2.dict_code=bs.ADMINISTRATIVE_DUTY_LEVEL and sys2.group_name='ADMINISTRATIVE_DUTY_LEVEL'
+      where bj.judging_code=#{JUDGING_CODE}
+      <if test="SPECIALITY_NAME != null and SPECIALITY_NAME != ''">
+        and bs.SPECIALITY_NAME like '%'||#{SPECIALITY_NAME}||'%'
+      </if>
+      <if test="NOWUNIT != null and NOWUNIT != ''">
+        and bs.NOWUNIT like '%'||#{NOWUNIT}||'%'
+      </if>
+      <if test="xkz != null and xkz != ''">
+        and bsgr.id=#{xkz}
+      </if>
+  </select>
+  <!--获取学科组下拉框-->
+  <select id="selectSubject" parameterType="pd" resultType="Map">
+   select * from BASE_SUBJECT_GROUP
+    where JUDGING_CODE=#{JUDGING_CODE}
+    ORDER BY group_no
+  </select>
+
+  <select id="findSpecialityNotice" parameterType="pd" resultType="pd">
+    select * from ( select rownum rn,e.* from(
+        SELECT
+        BS.SPECIALITY_NAME,  bs.PROFESSIAL, bs.ID_CARD_NO, bs.MOBILEPHONE,bsn.DIRECTOR,  bs.TEL,nvl(bsn.type,0) type,  bsn.REASON, bs.NOWUNIT, bsgr.GROUP_NAME,
+        bj.judging_code, syu.login_name,  BS.PROFESSIAL_LEVEL, bs.PERSONAL_NUMBER,  bsg. GROUP_ID
+    FROM
+        BASE_SPECIALITY bs
+    LEFT JOIN BASE_SPECIALITY_GROUP bsg ON BSG.SPECIALITY_ID = BS. ID
+    LEFT JOIN BASE_SUBJECT_GROUP bsgr ON bsgr. ID = bsg. GROUP_ID
+    LEFT JOIN BASE_JUDGING bj ON bj.judging_code = bsgr.judging_code
+    LEFT JOIN SYS_USER syu ON syu.user_id = bs.PERSONAL_NUMBER
+    LEFT JOIN BASE_SPECIALITY_NOTICE bsn on bsn.PERSONAL_NUMBER=bs.PERSONAL_NUMBER and bsn.GROUP_ID = bsgr.id
+    where  bj.judging_code=#{JUDGING_CODE}
+    <if test="GROUP_ID != null and GROUP_ID != ''">
+      and bsgr.id=#{GROUP_ID}
+    </if>
+    <if test="SPECIALITY_NAME != null and SPECIALITY_NAME != ''">
+      and bs.SPECIALITY_NAME like '%'||#{SPECIALITY_NAME}||'%'
+    </if>
+    <if test="NOWUNIT != null and NOWUNIT != ''">
+      and bs.NOWUNIT like '%'||#{NOWUNIT}||'%'
+    </if>
+    <if test="TYPE != null and TYPE != ''">
+      and bsn.TYPE =#{TYPE}
+    </if>
+    ) e
+    <if test="page != null and rows != null">
+      where rownum &lt;=#{rows}*#{page}) f
+      where  rn>(#{page}-1)*#{rows}
+    </if>
+  </select>
+
+  <select id="findSpecialityNoticeCount" parameterType="pd" resultType="Integer">
+    select  count(*) as listcount
+    FROM
+    BASE_SPECIALITY bs
+    LEFT JOIN BASE_SPECIALITY_GROUP bsg ON BSG.SPECIALITY_ID = BS. ID
+    LEFT JOIN BASE_SUBJECT_GROUP bsgr ON bsgr. ID = bsg. GROUP_ID
+    LEFT JOIN BASE_JUDGING bj ON bj.judging_code = bsgr.judging_code
+    LEFT JOIN SYS_USER syu ON syu.user_id = bs.PERSONAL_NUMBER
+    LEFT JOIN BASE_SPECIALITY_NOTICE bsn on bsn.PERSONAL_NUMBER=bs.PERSONAL_NUMBER and bsn.GROUP_ID = bsgr.id
+    where  bj.judging_code=#{JUDGING_CODE}
+    <if test="GROUP_ID != null and GROUP_ID != ''">
+      and bsgr.id=#{GROUP_ID}
+    </if>
+    <if test="SPECIALITY_NAME != null and SPECIALITY_NAME != ''">
+      and bs.SPECIALITY_NAME like '%'||#{SPECIALITY_NAME}||'%'
+    </if>
+    <if test="NOWUNIT != null and NOWUNIT != ''">
+      and bs.NOWUNIT like '%'||#{NOWUNIT}||'%'
+    </if>
+    <if test="TYPE != null and TYPE != ''">
+      and bsn.TYPE =#{TYPE}
+    </if>
+  </select>
+
+
+    <update id="UpdateOrAdd" parameterType="pd" >
+        merge into BASE_SPECIALITY_NOTICE bsn
+        using (select #{PERSONAL_NUMBER} PERSONAL_NUMBER,#{GROUP_ID} GROUP_ID from dual) bsn2
+        on (bsn.PERSONAL_NUMBER=bsn2.PERSONAL_NUMBER and bsn.GROUP_ID=bsn2.GROUP_ID)
+        when matched then
+          UPDATE SET bsn.REASON=#{REASON},bsn.type= #{TYPE}
+        WHEN NOT MATCHED THEN
+         insert (TYPE,REASON,PERSONAL_NUMBER,GROUP_ID) VALUES (
+           #{TYPE},#{REASON},#{PERSONAL_NUMBER},#{GROUP_ID}
+        )
+
+    </update>
+
+    <select id="ExportExcelNotice" parameterType="pd" resultType="pd">
+        SELECT
+        BSN.TYPE,
+        BSN.REASON,
+        BSN.DIRECTOR,
+        BSG.GROUP_NAME,
+        BSG.JUDGING_CODE,
+        BSN.PERSONAL_NUMBER,
+        bs.SPECIALITY_NAME
+    FROM
+        BASE_SPECIALITY_NOTICE bsn
+    LEFT JOIN BASE_SUBJECT_GROUP bsg ON BSG.ID = BSN."GROUP_ID"
+
+
+    LEFT JOIN BASE_SPECIALITY bs on bs.PERSONAL_NUMBER=bsn.PERSONAL_NUMBER
+    where BSG.JUDGING_CODE=#{JUDGING_CODE}
+    </select>
+
+</mapper>

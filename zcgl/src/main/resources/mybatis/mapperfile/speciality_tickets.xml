@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="confing/mappers.speciality_tickets">
+  <resultMap id="BaseResultMap" type="com.hz.demo.model.speciality_tickets">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="GROUP_ID" jdbcType="VARCHAR" property="groupId" />
+    <result column="SPECIALITY_ID" jdbcType="VARCHAR" property="specialityId" />
+    <result column="TICKETS" jdbcType="VARCHAR" property="tickets" />
+    <result column="REMARKS" jdbcType="VARCHAR" property="remarks" />
+    <result column="PROPOSER_ID" jdbcType="VARCHAR" property="proposerId" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="TEXT" jdbcType="VARCHAR" property="text" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, GROUP_ID, SPECIALITY_ID, TICKETS, REMARKS, PROPOSER_ID, TYPE, TEXT
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.math.BigDecimal" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_SPECIALITY_TICKETS
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.math.BigDecimal">
+    delete from BASE_SPECIALITY_TICKETS
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.hz.demo.model.speciality_tickets">
+    insert into BASE_SPECIALITY_TICKETS (ID, GROUP_ID, SPECIALITY_ID, 
+      TICKETS, REMARKS, PROPOSER_ID, 
+      TYPE, TEXT)
+    values (#{id,jdbcType=DECIMAL}, #{groupId,jdbcType=VARCHAR}, #{specialityId,jdbcType=VARCHAR}, 
+      #{tickets,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{proposerId,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hz.demo.model.speciality_tickets">
+
+    insert into BASE_SPECIALITY_TICKETS
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="groupId != null">
+        GROUP_ID,
+      </if>
+      <if test="specialityId != null">
+        SPECIALITY_ID,
+      </if>
+      <if test="tickets != null">
+        TICKETS,
+      </if>
+      <if test="remarks != null">
+        REMARKS,
+      </if>
+      <if test="proposerId != null">
+        PROPOSER_ID,
+      </if>
+      <if test="type != null">
+        TYPE,
+      </if>
+      <if test="text != null">
+        TEXT,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=DECIMAL},
+      </if>
+      <if test="groupId != null">
+        #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="specialityId != null">
+        #{specialityId,jdbcType=VARCHAR},
+      </if>
+      <if test="tickets != null">
+        #{tickets,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="proposerId != null">
+        #{proposerId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null">
+        #{text,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hz.demo.model.speciality_tickets">
+    update BASE_SPECIALITY_TICKETS
+    <set>
+      <if test="groupId != null">
+        GROUP_ID = #{groupId,jdbcType=VARCHAR},
+      </if>
+      <if test="specialityId != null">
+        SPECIALITY_ID = #{specialityId,jdbcType=VARCHAR},
+      </if>
+      <if test="tickets != null">
+        TICKETS = #{tickets,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        REMARKS = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="proposerId != null">
+        PROPOSER_ID = #{proposerId,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        TYPE = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null">
+        TEXT = #{text,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hz.demo.model.speciality_tickets">
+
+    update BASE_SPECIALITY_TICKETS
+    set GROUP_ID = #{groupId,jdbcType=VARCHAR},
+      SPECIALITY_ID = #{specialityId,jdbcType=VARCHAR},
+      TICKETS = #{tickets,jdbcType=VARCHAR},
+      REMARKS = #{remarks,jdbcType=VARCHAR},
+      PROPOSER_ID = #{proposerId,jdbcType=VARCHAR},
+      TYPE = #{type,jdbcType=VARCHAR},
+      TEXT = #{text,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+
+  <select id="selectTicketsInfo" parameterType="pd" resultType="pd">
+    select BP.DISPLAY_NAME,BP.ID_CARD_NO,BUN.UNIT_NAME,bun2.unit_name,sd1.dict_name xl,sd2.dict_name sqzc
+    ,sd3.dict_name pslx,bsg.group_name,bst.TICKETS,bst.REMARKS,bst.TEXT,bst.TYPE,
+		BP.id PROPOSER_ID,bpg.group_id,tpm.BASE_JUDGING_SERIES judging_code,
+      bjp.PROCESS_GROUP
+    from BASE_PROPOSER bp
+    LEFT JOIN BASE_UNIT bun on BUN.UNIT_CODE=BP.DECLARE_UNITCODE
+    LEFT JOIN BASE_UNIT bun2 on bun2.unit_code=bp.BASIC_UNITCODE
+    LEFT JOIN TB_PROPOSER_MSG tpm on tpm.user_id=bp.id
+    LEFT JOIN(SELECT dict_code,dict_name FROM sys_dict WHERE group_name='REVIEW_SERIES')sd1 on sd1.dict_code=tpm.REVIEW_SERIES
+    LEFT JOIN(SELECT dict_code,dict_name FROM sys_dict WHERE group_name='POSITIONAL_TITLES')sd2 on sd2.dict_code=tpm.propose_position
+    LEFT JOIN(SELECT dict_code,dict_name FROM sys_dict WHERE group_name='REVIEW_TYPE')sd3 on sd3.dict_code=tpm.pingshentype
+    LEFT JOIN BASE_PROPOSER_GROUP bpg on bpg.PROPOSER_ID=bp.id
+    LEFT JOIN BASE_SUBJECT_GROUP bsg on bsg.id=bpg.group_id
+    LEFT JOIN BASE_SPECIALITY_TICKETS bst on bst.PROPOSER_ID=bp.id and bst.type=#{TYPE} and bst.SPECIALITY_ID=#{SPECIALITY_ID}
+    left join BASE_JUDGING_PROCESS bjp on bjp.judging_code=tpm.BASE_JUDGING_SERIES
+      where bp.STATE=1 and tpm.CURRENT_STATE=18
+    <if test="GEOUPID!='' and TYPE==1">
+        and bsg.id=#{GEOUPID}
+    </if>
+      <if test="GEOUPID==0 and TYPE==2">
+          AND tpm.BASE_JUDGING_SERIES=#{JUDGING_CODE}
+      </if>
+      <if test="GEOUPID!=0 and TYPE==2">
+          and bsg.id=#{GEOUPID}
+      </if>
+      order by bp.DISPLAY_NAME asc
+  </select>
+
+    <select id="findSpliTick" parameterType="pd" resultType="pd">
+      select count(*) cou from BASE_SPECIALITY_TICKETS
+      where type=#{type}
+       <if test="type==1">
+           and group_id=#{GROUP_ID}
+       </if>
+        <if test="type==2">
+            and group_id= #{JUDGING_CODE}
+        </if>
+        and SPECIALITY_ID=#{SPECIALITY_ID}
+    </select>
+
+  <update id="updateTickets" parameterType="pd" >
+        merge into BASE_SPECIALITY_TICKETS bsn
+        using (select #{GROUP_ID} GROUP_ID,#{SPECIALITY_ID} SPECIALITY_ID,#{PROPOSER_ID} PROPOSER_ID,#{TYPE} TYPE from dual) bsn2
+        on (bsn.GROUP_ID=bsn2.GROUP_ID and bsn.SPECIALITY_ID=bsn2.SPECIALITY_ID and bsn.PROPOSER_ID=bsn2.PROPOSER_ID and bsn.TYPE=bsn2.TYPE )
+        when matched then
+          UPDATE SET bsn.TICKETS=#{TICKETS},bsn.REMARKS= #{REMARKS}
+        WHEN NOT MATCHED THEN
+         insert (GROUP_ID,SPECIALITY_ID,PROPOSER_ID,TYPE,TICKETS,REMARKS) VALUES (
+           #{GROUP_ID},#{SPECIALITY_ID},#{PROPOSER_ID},#{TYPE},#{TICKETS},#{REMARKS}
+        )
+  </update>
+    
+    <select id="selectTicketsRemarks" parameterType="pd" resultType="pd">
+        select BP.DISPLAY_NAME,bsg.GROUP_LEADER,bs.SPECIALITY_NAME,bst.REMARKS,bst.TICKETS
+         from BASE_PROPOSER  bp
+        LEFT JOIN BASE_PROPOSER_GROUP bpg on BPG.PROPOSER_ID=BP.id
+        LEFT JOIN BASE_SPECIALITY_GROUP bsg on BSG.group_id= bpg.group_id
+        LEFT JOIN BASE_SPECIALITY bs on bs.id= bsg.SPECIALITY_ID
+        LEFT JOIN BASE_SPECIALITY_TICKETS bst on bst.PROPOSER_ID=bp.id
+        and bst.SPECIALITY_ID=bs.id and bst.type=#{TYPE}
+        where 1=1
+        <if test="PROPOSER_ID!='' and PROPOSER_ID!=null">
+            and bp.id=#{PROPOSER_ID}
+        </if>
+
+        <if test="GROUP_ID!='' and GROUP_ID!=null">
+            and bsg.group_id=#{GROUP_ID}
+        </if>
+    </select>
+
+    <!--获取申请人得票数-->
+    <select id="selectTicketsComment" parameterType="pd" resultType="pd">
+      select
+        distinct
+        BP.DISPLAY_NAME,
+        BUN.UNIT_NAME,
+        BSGR.PROPORTION,
+        bp.id PROPOSER_ID,
+        bsgr.group_id,
+        rre.GROUP_RESULT_OPINION,
+        rre.GROUP_RESULT,
+        rre.REVIEW_RESULT_OPINION,
+        rre.REVIEW_RESULT,
+        ( SELECT count( * ) FROM BASE_SPECIALITY_TICKETS WHERE TYPE =#{TYPE} AND PROPOSER_ID = bp.id AND TICKETS = 1 ) ty,
+        ( SELECT count( * ) FROM BASE_SPECIALITY_TICKETS WHERE TYPE =#{TYPE} AND PROPOSER_ID = bp.id AND TICKETS = 2 ) bty,
+        ( SELECT count( * ) FROM BASE_SPECIALITY_TICKETS WHERE TYPE =#{TYPE} AND PROPOSER_ID = bp.id AND TICKETS = 3 ) qq
+        FROM
+        BASE_SPECIALITY_TICKETS bst
+        <if test="TYPE==1">
+            left join  ( select id group_id,JUDGING_CODE,PROPORTION from BASE_SUBJECT_GROUP) BSGR on  BSGR.group_id=bst.group_id
+        </if>
+        <if test="TYPE==2">
+   <!--    left join  ( select id,JUDGING_CODE,JUDGING_PROPORTION as PROPORTION from BASE_JUDGING ) BSGR on BSGR.judging_code=bst.group_id-->
+            left join  ( select bj.id, bj.JUDGING_CODE, bj.JUDGING_PROPORTION AS PROPORTION ,bsgg.id group_id,bpg.PROPOSER_ID                  from BASE_JUDGING bj
+            left join BASE_SUBJECT_GROUP bsgg on bsgg.JUDGING_CODE= bj.judging_code
+            LEFT JOIN BASE_PROPOSER_GROUP bpg on bpg.group_id=bsgg.id
+            ) BSGR on  BSGR.judging_code=bst.group_id and bsgr.PROPOSER_ID=bst.PROPOSER_ID
+        </if>
+        LEFT JOIN BASE_PROPOSER bp ON bp.id = bst.PROPOSER_ID
+        LEFT JOIN REC_REVIEWRESULT rre ON rre.user_id = bp.id
+        LEFT JOIN BASE_UNIT bun ON BUN.UNIT_CODE = BP.DECLARE_UNITCODE
+        LEFT JOIN TB_PROPOSER_MSG tpm on tpm.user_id=bp.id
+        where bst.type=#{TYPE} and bp.STATE=1 and tpm.CURRENT_STATE=18
+            <if test="GROUP_ID!=0">
+                <if test="TYPE==1">
+                    and bst.group_id=#{GROUP_ID}
+                </if>
+                <if test="TYPE==2">
+                    and  BSGR.group_id =#{GROUP_ID}
+                </if>
+
+            </if>
+            <if test="GROUP_ID==0">
+                <if test="TYPE==1">
+                    and bst.group_id=#{GROUP_ID}
+                </if>
+                <if test="TYPE==2">
+                    and  bst.group_id=#{JUDGING_CODE}
+                </if>
+            </if>
+        order by ty DESC
+    </select>
+    <!--查询学科组/评委会 总评人数，查询学科组/评委会 比例-->
+    <select id="selectCommentNums" resultType="pd" parameterType="pd">
+        <if test="TYPE==1">
+       select BSG.id group_id,BSG.PROPORTION,
+            (select count(*) from BASE_SPECIALITY_GROUP bsgr where bsgr.GROUP_ID=bsg.id and bsgr.TYPE=0) nus
+        from BASE_SUBJECT_GROUP bsg
+        where 1=1
+            <if test="GROUP_ID!='' and GROUP_ID!=null">
+                 and bsg.id=#{GROUP_ID}
+            </if>
+        </if>
+        <if test="TYPE==2">
+            <if test="GROUP_ID==0">
+                select bj.JUDGING_PROPORTION proportion,
+                  ( select count(*)  from BASE_ENGAGE ben where ben.judging_id=bj.id and ben.TYPE=0) nus
+                from base_judging bj
+                where bj.judging_code =#{JUDGING_CODE}
+            </if>
+            <if test="GROUP_ID!=0">
+                select BSG.id group_id,bj.JUDGING_PROPORTION proportion,
+                 (select count(*) from BASE_ENGAGE ben   where ben.judging_id=bj.id  and ben.TYPE=0) nus
+                from BASE_SUBJECT_GROUP bsg
+                left join BASE_JUDGING bj on bj.JUDGING_CODE=bsg.JUDGING_CODE
+                where 1=1
+                <if test="GROUP_ID!='' and GROUP_ID!=null">
+                    and bsg.id=#{GROUP_ID}
+                </if>
+            </if>
+        </if>
+    </select>
+
+    <!--评委会评议情况汇总-->
+    <select id="getCommentList" parameterType="pd" resultType="pd">
+        select
+        BP.DISPLAY_NAME,
+        BUN.UNIT_NAME,
+        bp.ID PROPOSER_ID,
+        rre.GROUP_RESULT_YES,
+        rre.GROUP_RESULT_NO,
+        rre.GROUP_RESULT_WAIVE,
+        rre.GROUP_RESULT_OPINION,
+        rre.GROUP_RESULT,
+        rre.REVIEW_RESULT_YES,
+        rre.REVIEW_RESULT_NO,
+        rre.REVIEW_RESULT_WAIVE,
+        rre.REVIEW_RESULT_OPINION,
+        rre.REVIEW_RESULT
+        from
+        REC_REVIEWRESULT rre
+        left join BASE_PROPOSER bp on bp.id=rre.USER_ID
+        LEFT JOIN BASE_UNIT bun ON BUN.UNIT_CODE = BP.DECLARE_UNITCODE
+        where 1=1
+        <if test="REVIEW_RESULT!='' and REVIEW_RESULT!=null">
+            and rre.REVIEW_RESULT=#{REVIEW_RESULT}
+        </if>
+        <if test="GROUP_ID!=0">
+            and rre.GROUP_ID=#{GROUP_ID}
+        </if>
+        <if test="JUDGING_CODE!='' and JUDGING_CODE!=null">
+            and rre.JUDGING_CODE=#{JUDGING_CODE}
+        </if>
+    </select>
+    <!--获取申报人信息-->
+    <select id="selectPropser" parameterType="pd" resultType="pd">
+        select
+        tpb.BASE_JUDGING_SERIES,but.AREA_NUMBER,bp.BASIC_UNITCODE,tpb.REVIEW_SERIES,
+        tpb.SHENBAOMAJOR_ID,tpb.PROPOSE_POSITION,tpb.MAJOR,tpb.PINGSHENTYPE,bp.id user_id,
+        bp.DISPLAY_NAME,bp.ID_CARD_NO,tpb.SEX,sd1.dict_code dict_code1,sd.dict_code
+        from BASE_PROPOSER bp
+        left join TB_PROPOSER_MSG tpb on tpb.user_id=bp.id
+      	LEFT JOIN SYS_DICT sd on sd.dict_code=tpb.PROPOSE_POSITION and sd.group_name='POSITIONAL_TITLES'
+		LEFT JOIN SYS_DICT sd1 on sd1.dict_code=sd.BACKUP2 and sd1.group_name='TITLE_LEVEL'
+        LEFT JOIN BASE_UNIT but on but.UNIT_CODE=bp.DECLARE_UNITCODE
+        where bp.id=#{userId}
+    </select>
+    
+</mapper>

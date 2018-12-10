@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="confing/mappers.BaseStamp" >
+  <resultMap id="BaseResultMap" type="com.hz.demo.model.BaseStamp" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="FILEURL" property="fileurl" jdbcType="VARCHAR" />
+    <result column="ADDTIME" property="addtime" jdbcType="TIMESTAMP" />
+    <result column="UNIT_CODE" property="unitCode" jdbcType="VARCHAR" />
+    <result column="BACK1" property="back1" jdbcType="VARCHAR" />
+    <result column="BACK2" property="back2" jdbcType="VARCHAR" />
+    <result column="BACK3" property="back3" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, USER_ID, NAME, FILEURL, ADDTIME, UNIT_CODE, BACK1, BACK2, BACK3
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from BASE_STAMP
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from BASE_STAMP
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insertSelective" parameterType="pd" >
+    insert into BASE_STAMP
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="fileurl != null" >
+        FILEURL,
+      </if>
+      <if test="addtime != null" >
+        ADDTIME,
+      </if>
+      <if test="unitCode != null" >
+        UNIT_CODE,
+      </if>
+      <if test="back1 != null" >
+        BACK1,
+      </if>
+      <if test="back2 != null" >
+        BACK2,
+      </if>
+      <if test="back3 != null" >
+        BACK3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="fileurl != null" >
+        #{fileurl,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        to_date(#{addtime,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+      </if>
+      <if test="unitCode != null" >
+        #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="back1 != null" >
+        #{back1,jdbcType=VARCHAR},
+      </if>
+      <if test="back2 != null" >
+        #{back2,jdbcType=VARCHAR},
+      </if>
+      <if test="back3 != null" >
+        #{back3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="pd" >
+    update BASE_STAMP
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="fileurl != null" >
+        FILEURL = #{fileurl,jdbcType=VARCHAR},
+      </if>
+      <if test="addtime != null" >
+        ADDTIME =  to_date(#{addtime,jdbcType=TIMESTAMP},'yyyy-mm-dd hh24:mi:ss'),
+      </if>
+      <if test="unitCode != null" >
+        UNIT_CODE = #{unitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="back1 != null" >
+        BACK1 = #{back1,jdbcType=VARCHAR},
+      </if>
+      <if test="back2 != null" >
+        BACK2 = #{back2,jdbcType=VARCHAR},
+      </if>
+      <if test="back3 != null" >
+        BACK3 = #{back3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <!--根据条件查询全部记录-->
+  <select id="getBaseStampList" parameterType="pd" resultMap="BaseResultMap">
+
+    select <include refid="Base_Column_List"/>
+    from
+    (select rownum rn,e.* from
+    (
+    select a.* from BASE_STAMP a WHERE a.UNIT_CODE = #{unitCode}
+    ORDER by a.addtime DESC ) e
+    <if test="page != null and rows != null">
+      where rownum &lt;=#{rows}*#{page}) b
+      where  rn>(#{page}-1)*#{rows}
+    </if>
+  </select>
+
+  <!--根据条件查询全部记录个数-->
+  <select id="selectCount" parameterType="pd" resultType="Integer">
+    select count(*)  from BASE_STAMP  WHERE UNIT_CODE = #{unitCode}
+  </select>
+
+  <select id="selectBaseStampModel" parameterType="pd" resultType="java.util.Map">
+    select bs.*,bu.UNIT_NAME as UNIT_NAME_NAME from BASE_STAMP bs
+    left join BASE_UNIT bu on bu.UNIT_CODE=bs.UNIT_CODE
+    where bs.UNIT_CODE=#{unitCode}
+  </select>
+
+
+
+</mapper>

@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="CreateSpecialityAllMsgMapper">
+    <resultMap id="allmsg" type="specialityMsg">
+        <id column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="spe.USER_ID" property="userId" jdbcType="VARCHAR"/>
+        <result column="ADMINISTRATIVE_DUTY_LEVEL" property="administrativeDutyLevel" jdbcType="VARCHAR"/>
+        <result column="PROFESSIAL_DUTY_LEVEL" property="professialDutyLevel" jdbcType="VARCHAR"/>
+        <result column="PROFESSIAL_LEVEL" property="professialLevel" jdbcType="VARCHAR"/>
+        <result column="PROFESSIAL" property="professial" jdbcType="VARCHAR"/>
+        <result column="JOB_YEAR" property="jobYear" jdbcType="VARCHAR"/>
+        <result column="PERFORMANCE" property="performance" jdbcType="VARCHAR"/>
+        <result column="EDUCATION" property="education" jdbcType="VARCHAR"/>
+        <result column="DEGREE" property="degree" jdbcType="VARCHAR"/>
+        <result column="NOWUNIT" property="nowunit" jdbcType="VARCHAR"/>
+        <result column="AREACODE" property="areacode" jdbcType="VARCHAR"/>
+        <result column="GRADUATE_SCHOOL" property="graduateSchool" jdbcType="VARCHAR"/>
+        <result column="GRADUATE_DATE" property="graduateDate" jdbcType="TIMESTAMP"/>
+        <result column="ATTENDING_ACADEMIC_GROUPS" property="attendingAcademicGroups" jdbcType="VARCHAR"/>
+        <result column="HONORARY_TITLE" property="honoraryTitle" jdbcType="VARCHAR"/>
+        <result column="WORK_SITUATION" property="workSituation" jdbcType="VARCHAR"/>
+        <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+        <result column="PROPOSE_STATE" property="proposeState" jdbcType="VARCHAR"/>
+        <result column="REVIEW_SERIES" property="reviewSeries" jdbcType="VARCHAR"/>
+        <result column="SHENBAOMAJOR_ID" property="shenbaomajorId" jdbcType="VARCHAR"/>
+        <result column="PINGSHENTYPE" property="pingshentype" jdbcType="VARCHAR"/>
+        <result column="CURRENT_STATE" property="currentState" jdbcType="VARCHAR"/>
+        <result column="BACKUP1" property="backup1" jdbcType="VARCHAR"/>
+        <result column="BACKUP2" property="backup2" jdbcType="VARCHAR"/>
+        <result column="BACKUP3" property="backup3" jdbcType="VARCHAR"/>
+        <result column="STAT2" property="stat2" jdbcType="VARCHAR"/>
+        <result column="SEX" property="sex" jdbcType="VARCHAR"/>
+        <result column="NATION" property="nation" jdbcType="VARCHAR"/>
+        <result column="BIRTHDAY" property="birthday" jdbcType="TIMESTAMP"/>
+        <result column="POLITICAL_OUTLOOK" property="politicalOutlook" jdbcType="VARCHAR"/>
+        <result column="STARTWORKTIME" property="startworktime" jdbcType="TIMESTAMP"/>
+        <result column="NOW_JOB_TIME" property="nowJobTime" jdbcType="TIMESTAMP"/>
+        <result column="JUDGING_STAGE" property="judgingStage" jdbcType="VARCHAR"/>
+        <result column="USERPICURL" property="userpicurl" jdbcType="VARCHAR"/>
+        <result column="REPORT_DATE" property="reportDate" jdbcType="TIMESTAMP"/>
+        <result column="EMAIL" property="email" jdbcType="VARCHAR" />
+        <result column="TEL" property="tel" jdbcType="VARCHAR" />
+        <result column="PRESENTATION" property="presentation" jdbcType="VARCHAR" />
+        <association property="baseProposer" column="BASE.ID"
+                     javaType="com.hz.demo.model.base_proposer">
+            <id column="BASE.ID" property="id" jdbcType="INTEGER"/>
+            <result column="BASE.DECLARE_UNITCODE" property="declareUnitcode" jdbcType="VARCHAR"/>
+            <result column="BASE.BASIC_UNITCODE" property="basicUnitcode" jdbcType="VARCHAR"/>
+            <result column="BASE.DISPLAY_NAME" property="displayName" jdbcType="VARCHAR"/>
+            <result column="BASE.MOBILEPHONE" property="mobilephone" jdbcType="VARCHAR"/>
+            <result column="BASE.EMAIL" property="email" jdbcType="VARCHAR"/>
+            <result column="BASE.ID_CARD_NO" property="idCardNo" jdbcType="VARCHAR"/>
+            <result column="BASE.ADD_USER_ID" property="addUserId" jdbcType="VARCHAR"/>
+            <result column="BASE.ADD_TIME" property="addTime" jdbcType="TIMESTAMP"/>
+            <result column="BASE.STATE" property="state" jdbcType="INTEGER"/>
+            <result column="BASE.BACKUP1" property="backup1" jdbcType="VARCHAR"/>
+            <result column="BASE.BACKUP2" property="backup2" jdbcType="VARCHAR"/>
+            <result column="BASE.BACKUP3" property="backup3" jdbcType="VARCHAR"/>
+        </association>
+
+        <collection property="work" column="wor.id" ofType="work">
+            <id column="wor.id" property="id" jdbcType="VARCHAR"/>
+            <result column="wor.user_id" property="userid" jdbcType="VARCHAR"/>
+            <result column="wor.starttime" property="starttime" jdbcType="TIMESTAMP"/>
+            <result column="wor.endtime" property="endtime" jdbcType="TIMESTAMP"/>
+            <result column="wor.workcompanyname" property="workcompanyname" jdbcType="VARCHAR"/>
+            <result column="wor.job" property="job" jdbcType="VARCHAR"/>
+            <result column="wor.positionaltitles" property="positionaltitles" jdbcType="VARCHAR"/>
+            <result column="wor.reference" property="reference" jdbcType="VARCHAR"/>
+            <result column="wor.extrainfo" property="extrainfo" jdbcType="VARCHAR"/>
+            <result column="wor.state" property="state" jdbcType="VARCHAR"/>
+            <result column="wor.backup1" property="backup1" jdbcType="VARCHAR"/>
+            <result column="wor.backup2" property="backup2" jdbcType="VARCHAR"/>
+            <result column="wor.backup3" property="backup3" jdbcType="VARCHAR"/>
+            <collection property="workfile" column="wor.id" ofType="workfile">
+                <id column="worf.id" property="id" jdbcType="VARCHAR"/>
+                <result column="worf.workid" property="workid" jdbcType="VARCHAR"/>
+                <result column="worf.fileurl" property="fileurl" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+
+        <collection property="achievement" column="userId" ofType="achievement">
+            <id column="achi.ID" property="id" jdbcType="VARCHAR"/>
+            <result column="achi.USER_ID" property="userId" jdbcType="VARCHAR"/>
+            <result column="achi.GET_TIME" property="getTime" jdbcType="TIMESTAMP"/>
+            <result column="achi.ACHIEVEMENT_NAME" property="achievementName" jdbcType="VARCHAR"/>
+            <result column="achi.CONTENT" property="content" jdbcType="VARCHAR"/>
+        </collection>
+
+        <collection property="award" column="awa.id" ofType="award">
+            <id column="awa.ID" property="id" jdbcType="VARCHAR"/>
+            <result column="awa.USER_ID" property="userId" jdbcType="VARCHAR"/>
+            <result column="awa.NAME" property="name" jdbcType="VARCHAR"/>
+            <result column="awa.AWARD_DEPARTMENT" property="awardDepartment" jdbcType="VARCHAR"/>
+            <result column="awa.AWARD_DATE" property="awardDate" jdbcType="TIMESTAMP"/>
+            <result column="awa.PAIMING" property="paiming" jdbcType="VARCHAR"/>
+            <result column="awa.AWARD_LEVEL" property="awardLevel" jdbcType="VARCHAR"/>
+            <result column="awa.GRADE" property="grade" jdbcType="VARCHAR"/>
+            <result column="awa.BACKUP1" property="backup1" jdbcType="VARCHAR"/>
+            <result column="awa.BACKUP2" property="backup2" jdbcType="VARCHAR"/>
+            <result column="awa.BACKUP3" property="backup3" jdbcType="VARCHAR"/>
+            <collection property="awardFile" column="awaf.id" ofType="awardFile">
+                <id column="awaf.id" property="id" jdbcType="VARCHAR"/>
+                <result column="awaf.awardId" property="awardId" jdbcType="VARCHAR"/>
+                <result column="awaf.fileurl" property="fileurl" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+
+        <collection property="paper" column="pap.id" ofType="paper">
+            <id column="pap.ID" property="id" jdbcType="VARCHAR"/>
+            <result column="pap.USER_ID" property="userId" jdbcType="VARCHAR"/>
+            <result column="pap.PAPERNAME" property="papername" jdbcType="VARCHAR"/>
+            <result column="pap.PUBLISHTIME" property="publishtime" jdbcType="TIMESTAMP"/>
+            <result column="pap.WORDNUMBER" property="wordnumber" jdbcType="VARCHAR"/>
+            <result column="pap.PUBLISHINGHOUSE" property="publishinghouse" jdbcType="VARCHAR"/>
+            <result column="pap.APPRAISAL" property="appraisal" jdbcType="DECIMAL"/>
+            <result column="pap.PAIMING" property="paiming" jdbcType="VARCHAR"/>
+            <result column="pap.EXTRAINFO" property="extrainfo" jdbcType="VARCHAR"/>
+            <result column="pap.STATE" property="state" jdbcType="VARCHAR"/>
+            <result column="pap.PUBLICATION_NAME" property="publicationName" jdbcType="VARCHAR"/>
+            <result column="pap.ISBN" property="isbn" jdbcType="VARCHAR"/>
+            <result column="pap.PAPER_LEVEL" property="paperLevel" jdbcType="VARCHAR"/>
+            <collection property="paperfile" column="papf.paperid" ofType="paperfile">
+                <id column="papf.id" property="id" jdbcType="VARCHAR"/>
+                <result column="papf.paperid" property="paperid" jdbcType="VARCHAR"/>
+                <result column="papf.fileurl" property="fileurl" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+
+        <collection property="book" column="book.id" ofType="book">
+            <id column="book.ID" property="id" jdbcType="VARCHAR"/>
+            <result column="book.USER_ID" property="userId" jdbcType="VARCHAR"/>
+            <result column="book.BOOKNAME" property="bookname" jdbcType="VARCHAR"/>
+            <result column="book.PUBLISHTIME" property="publishtime" jdbcType="TIMESTAMP"/>
+            <result column="book.WORDNUMBER" property="wordnumber" jdbcType="VARCHAR"/>
+            <result column="book.PUBLISHINGHOUSE" property="publishinghouse" jdbcType="VARCHAR"/>
+            <result column="book.PAIMING" property="paiming" jdbcType="VARCHAR"/>
+            <result column="book.EXTRAINFO" property="extrainfo" jdbcType="VARCHAR"/>
+            <result column="book.BOOK_LEVEL" property="bookLevel" jdbcType="VARCHAR"/>
+            <result column="book.BOOK_NUMBER" property="bookNumber" jdbcType="VARCHAR"/>
+            <collection property="bookFile" column="bookf.book_id" ofType="bookFile">
+                <id column="bookf.id" property="id" jdbcType="VARCHAR"/>
+                <result column="bookf.book_id" property="bookId" jdbcType="VARCHAR"/>
+                <result column="bookf.fileurl" property="fileurl" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+
+        <collection property="research" column="res.id" ofType="research">
+            <id column="res.ID" property="id" jdbcType="VARCHAR"/>
+            <result column="res.USER_ID" property="userId" jdbcType="VARCHAR"/>
+            <result column="res.GET_DATE" property="getDate" jdbcType="TIMESTAMP"/>
+            <result column="res.RESEARCH_NAME" property="researchName" jdbcType="VARCHAR"/>
+            <result column="res.RESEARCH_INFO" property="researchInfo" jdbcType="VARCHAR"/>
+            <result column="res.RESEARCH_LEVEL" property="researchLevel" jdbcType="VARCHAR"/>
+            <result column="res.RESEARCH_LEVEL_NAME" property="researchLevelName" jdbcType="VARCHAR"/>
+            <result column="res.BACKUP1" property="backup1" jdbcType="VARCHAR"/>
+            <result column="res.BACKUP2" property="backup2" jdbcType="VARCHAR"/>
+            <result column="res.BACKUP3" property="backup3" jdbcType="VARCHAR"/>
+            <result column="res.PAIMING" property="paiming" jdbcType="VARCHAR"/>
+            <collection property="researchFile" column="resf.researchid" ofType="researchFile">
+                <id column="resf.id" property="id" jdbcType="VARCHAR"/>
+                <result column="resf.researchid" property="researchid" jdbcType="VARCHAR"/>
+                <result column="resf.fileurl" property="fileurl" jdbcType="VARCHAR"/>
+            </collection>
+        </collection>
+
+        <collection property="majorResearch" column="userId" ofType="majorResearch">
+            <id column="maj.ID" property="id" jdbcType="VARCHAR"/>
+            <result column="maj.USER_ID" property="userId" jdbcType="VARCHAR"/>
+            <result column="maj.MAJOR" property="major" jdbcType="VARCHAR"/>
+            <result column="maj.MAJOR_RESEARCH" property="majorResearch" jdbcType="VARCHAR"/>
+        </collection>
+
+    </resultMap>
+    <sql id="specialityMsg_column">ID, USER_ID, ADMINISTRATIVE_DUTY_LEVEL, PROFESSIAL_DUTY_LEVEL, PROFESSIAL_LEVEL,
+    PROFESSIAL, JOB_YEAR, PERFORMANCE, EDUCATION, DEGREE, NOWUNIT, AREACODE, GRADUATE_SCHOOL,
+    GRADUATE_DATE, ATTENDING_ACADEMIC_GROUPS, HONORARY_TITLE, WORK_SITUATION, ADDRESS,
+    PROPOSE_STATE, REVIEW_SERIES, SHENBAOMAJOR_ID, PINGSHENTYPE, CURRENT_STATE, BACKUP1,
+    BACKUP2, BACKUP3, STAT2, SEX, NATION, BIRTHDAY, POLITICAL_OUTLOOK, STARTWORKTIME,
+    NOW_JOB_TIME, JUDGING_STAGE, USERPICURL,REPORT_DATE,EMAIL,TEL,PRESENTATION
+    </sql>
+
+
+    <sql id="all_column">
+        spe.ID, spe.USER_ID "spe.USER_ID", spe.ADMINISTRATIVE_DUTY_LEVEL,
+        spe.PROFESSIAL_DUTY_LEVEL, spe.PROFESSIAL_LEVEL,
+        spe.PROFESSIAL, spe.JOB_YEAR, spe.PERFORMANCE, spe.EDUCATION,
+        spe.DEGREE, spe.NOWUNIT, spe.AREACODE, spe.GRADUATE_SCHOOL,
+        TO_CHAR(spe.GRADUATE_DATE, 'YYYY-MM-DD') GRADUATE_DATE, spe.ATTENDING_ACADEMIC_GROUPS,
+        spe.HONORARY_TITLE,
+        spe.WORK_SITUATION, spe.ADDRESS,
+        spe.PROPOSE_STATE, spe.REVIEW_SERIES, spe.SHENBAOMAJOR_ID, spe.PINGSHENTYPE,
+        spe.CURRENT_STATE, spe.BACKUP1,
+        spe.BACKUP2, spe.BACKUP3, spe.STAT2, spe.SEX, spe.NATION,
+        TO_CHAR(spe.BIRTHDAY, 'YYYY-MM-DD') BIRTHDAY,
+        spe.POLITICAL_OUTLOOK,TO_CHAR(spe.STARTWORKTIME, 'YYYY-MM-DD') STARTWORKTIME,
+        TO_CHAR(spe.NOW_JOB_TIME, 'YYYY-MM-DD') NOW_JOB_TIME, spe.JUDGING_STAGE, spe.USERPICURL,
+        TO_CHAR(spe.REPORT_DATE, 'YYYY-MM-DD') REPORT_DATE,spe.EMAIL,spe.TEL,spe.PRESENTATION,
+
+        BASE.ID "BASE.ID", BASE.DECLARE_UNITCODE "BASE.DECLARE_UNITCODE",
+        BASE.BASIC_UNITCODE "BASE.BASIC_UNITCODE", BASE.DISPLAY_NAME "BASE.DISPLAY_NAME",
+        BASE.MOBILEPHONE "BASE.MOBILEPHONE", BASE.EMAIL "BASE.EMAIL", BASE.ID_CARD_NO "BASE.ID_CARD_NO",
+        BASE.ADD_USER_ID "BASE.ADD_USER_ID", BASE.ADD_TIME "BASE.ADD_TIME", BASE.STATE "BASE.STATE",
+        BASE.BACKUP1 "BASE.BACKUP1", BASE.BACKUP2 "BASE.BACKUP2", BASE.BACKUP3 "BASE.BACKUP3",
+
+
+        wor.id "wor.id", wor.user_id "wor.user_id", TO_CHAR(wor.starttime, 'YYYY-MM-DD') "wor.starttime", TO_CHAR(wor.endtime, 'YYYY-MM-DD') "wor.endtime",
+        wor.workcompanyname "wor.workcompanyname", wor.job "wor.job", wor.positionaltitles "wor.positionaltitles",
+        wor.reference "wor.reference", wor.extrainfo "wor.extrainfo", wor.state "wor.state",
+        wor.backup1 "wor.backup1", wor.backup2 "wor.backup2", wor.backup3 "wor.backup3",
+        wor.WORFID "worf.id", wor.workid "worf.workid", wor.fileurl "worf.fileurl",
+
+        achi.ID "achi.ID", achi.USER_ID "achi.USER_ID",
+        TO_CHAR(achi.GET_TIME, 'YYYY-MM-DD') "achi.GET_TIME",
+        achi.ACHIEVEMENT_NAME "achi.ACHIEVEMENT_NAME", achi.CONTENT "achi.CONTENT",
+
+
+        awa.ID "awa.ID", awa.USER_ID "awa.USER_ID", awa.NAME "awa.NAME",
+        awa.AWARD_DEPARTMENT "awa.AWARD_DEPARTMENT", TO_CHAR(awa.AWARD_DATE, 'YYYY-MM-DD') "awa.AWARD_DATE",
+        awa.PAIMING "awa.PAIMING", awa.AWARD_LEVEL "awa.AWARD_LEVEL", awa.GRADE "awa.GRADE",
+        awa.BACKUP1 "awa.BACKUP1", awa.BACKUP2 "awa.BACKUP2", awa.BACKUP3 "awa.BACKUP3",
+        awa.AWAFID "awaf.id", awa.award_id "awaf.awardId", awa.fileurl "awaf.fileurl",
+
+        pap.ID "pap.ID", pap.USER_ID "pap.USER_ID", pap.PAPERNAME "pap.PAPERNAME",
+        TO_CHAR(pap.PUBLISHTIME, 'YYYY-MM-DD') "pap.PUBLISHTIME", pap.WORDNUMBER "pap.WORDNUMBER",
+        pap.PUBLISHINGHOUSE "pap.PUBLISHINGHOUSE", pap.APPRAISAL "pap.APPRAISAL", pap.PAIMING "pap.PAIMING",
+        pap.EXTRAINFO "pap.EXTRAINFO", pap.STATE "pap.STATE",
+        pap.PUBLICATION_NAME "pap.PUBLICATION_NAME", pap.ISBN "pap.ISBN",
+        pap.PAPER_LEVEL "pap.PAPER_LEVEL", pap.PAPFID "papf.id", pap.paperid "papf.paperid",
+        pap.fileurl "papf.fileurl",
+
+        book.ID "book.ID", book.USER_ID "book.USER_ID", book.BOOKNAME "book.BOOKNAME",
+        TO_CHAR(book.PUBLISHTIME, 'YYYY-MM-DD') "book.PUBLISHTIME", book.WORDNUMBER "book.WORDNUMBER",
+        book.PUBLISHINGHOUSE "book.PUBLISHINGHOUSE", book.PAIMING "book.PAIMING",
+        book.EXTRAINFO "book.EXTRAINFO",
+        book.BOOK_LEVEL "book.BOOK_LEVEL", book.BOOK_NUMBER "book.BOOK_NUMBER",
+        book.BOOKFID "bookf.id", book.book_id "bookf.book_id", book.fileurl "bookf.fileurl",
+
+        res.ID "res.ID", res.USER_ID "res.USER_ID", TO_CHAR(res.GET_DATE, 'YYYY-MM-DD') "res.GET_DATE",
+        res.RESEARCH_NAME "res.RESEARCH_NAME", res.RESEARCH_INFO "res.RESEARCH_INFO",
+        res.RESEARCH_LEVEL "res.RESEARCH_LEVEL", res.RESEARCH_LEVEL_NAME "res.RESEARCH_LEVEL_NAME", res.BACKUP1 "res.BACKUP1",
+        res.BACKUP2 "res.BACKUP2", res.BACKUP3 "res.BACKUP3",
+        res.PAIMING "res.PAIMING", res.RESFID "resf.id", res.researchid "resf.researchid",
+        res.fileurl "resf.fileurl",
+
+        maj.ID "maj.ID", maj.USER_ID "maj.USER_ID", maj.MAJOR "maj.MAJOR", maj.MAJOR_RESEARCH "maj.MAJOR_RESEARCH"
+    </sql>
+    <sql id="selectuser">
+        select
+        <include refid="specialityMsg_column"/>
+        from TB_SPECIALITY_MSG
+    </sql>
+    <sql id="selectBASE">
+        select ID,
+               DECLARE_UNITCODE,
+               BASIC_UNITCODE,
+               DISPLAY_NAME,
+               MOBILEPHONE,
+               EMAIL,
+               ID_CARD_NO,
+               ADD_USER_ID,
+               ADD_TIME,
+               STATE,
+               BACKUP1,
+               BACKUP2,
+               BACKUP3
+        from BASE_PROPOSER
+        WHERE STATE = '1'
+    </sql>
+
+    <!--工作经历-->
+    <sql id="Wor_Two_Column_List">
+        w.id, w.user_id, w.starttime, w.endtime, w.workcompanyname, w.job, w.positionaltitles, w.reference,
+        w.extrainfo, w.state, w.backup1, w.backup2, w.backup3, wf.id "WORFID", wf.workid, wf.fileurl
+    </sql>
+    <sql id="Wor_Column_List">
+        id, user_id, starttime, endtime, workcompanyname, job, positionaltitles, reference,
+        extrainfo, state, backup1, backup2, backup3
+    </sql>
+    <sql id="selectwork">
+        select
+        <include refid="Wor_Two_Column_List"/>
+        from (
+        select
+        <include refid="Wor_Column_List"/>
+        from tb_work where user_id=#{userid} and state='1' ) w
+        left join (select id, workid,fileurl from tb_work_file) wf on w.id=wf.workid
+    </sql>
+    <!-- 工作经历end -->
+    <!--工作业绩-->
+    <sql id="selectAchievement">
+        select ID, USER_ID, GET_TIME, ACHIEVEMENT_NAME, CONTENT
+        from TB_ACHIEVEMENT
+    </sql>
+    <!--工作业绩end-->
+
+
+    <!--奖励-->
+    <sql id="Awa_Two_Column_List">
+        a.ID, a.USER_ID, a.NAME, a.AWARD_DEPARTMENT, a.AWARD_DATE, a.PAIMING, a.AWARD_LEVEL, a.GRADE, a.BACKUP1, a.BACKUP2,
+        a.BACKUP3, af.id "AWAFID", af.award_id, af.fileurl
+    </sql>
+
+    <sql id="Awa_Column_List">
+        ID, USER_ID, NAME, AWARD_DEPARTMENT, AWARD_DATE, PAIMING, AWARD_LEVEL, GRADE, BACKUP1, BACKUP2,
+        BACKUP3
+    </sql>
+
+    <sql id="selectaward">
+        select
+        <include refid="Awa_Two_Column_List"/>
+        from (
+        select
+        <include refid="Awa_Column_List"/>
+        from tb_award where user_id=#{userid} ) a
+        left join (select id, award_id,fileurl from tb_award_file) af on a.id=af.award_id
+    </sql>
+    <!-- 奖励end-->
+    <!--论文-->
+    <sql id="Pap_Two_Column_List">
+        p.ID, p.USER_ID, p.PAPERNAME, p.PUBLISHTIME, p.WORDNUMBER, p.PUBLISHINGHOUSE, p.APPRAISAL, p.PAIMING,
+        EXTRAINFO, p.STATE, p.PUBLICATION_NAME, p.ISBN, p.PAPER_LEVEL, pf.id "PAPFID", pf.paperid, pf.fileurl
+    </sql>
+
+    <sql id="Pap_Column_List">
+        ID, USER_ID, PAPERNAME, PUBLISHTIME, WORDNUMBER, PUBLISHINGHOUSE, APPRAISAL, PAIMING,
+        EXTRAINFO, STATE, PUBLICATION_NAME, ISBN, PAPER_LEVEL
+    </sql>
+
+    <sql id="selectpaper">
+        select
+        <include refid="Pap_Two_Column_List"/>
+        from (
+        select
+        <include refid="Pap_Column_List"/>
+        from tb_paper where user_id=#{userid} and state='1' ) p
+        left join (select id, paperid,fileurl from tb_paper_file) pf on p.id=pf.paperid
+    </sql>
+    <!-- 论文end-->
+
+    <!--论著-->
+    <sql id="Book_Two_Column_List">
+        b.ID, b.USER_ID, b.BOOKNAME, b.PUBLISHTIME, b.WORDNUMBER, b.PUBLISHINGHOUSE, b.PAIMING, b.EXTRAINFO,
+        b.BOOK_LEVEL, b.BOOK_NUMBER, bf.id "BOOKFID", bf.book_id, bf.fileurl
+    </sql>
+
+    <sql id="Book_Column_List">
+        ID, USER_ID, BOOKNAME, PUBLISHTIME, WORDNUMBER, PUBLISHINGHOUSE, PAIMING, EXTRAINFO,
+        BOOK_LEVEL, BOOK_NUMBER
+    </sql>
+
+    <sql id="selectbook">
+        select
+        <include refid="Book_Two_Column_List"/>
+        from (
+        select
+        <include refid="Book_Column_List"/>
+        from tb_book where user_id=#{userid} ) b
+        left join (select id, book_id,fileurl from tb_book_file) bf on b.id=bf.book_id
+    </sql>
+    <!-- 论著end-->
+
+    <!--成果-->
+    <sql id="Res_Two_Column_List">
+        R.ID, R.USER_ID, R.GET_DATE, R.RESEARCH_NAME, R.RESEARCH_INFO, R.RESEARCH_LEVEL, R.BACKUP1, R.BACKUP2, R.BACKUP3,
+        R.PAIMING, rf.id "RESFID", rf.researchid, rf.fileurl, rd.DICT_NAME "RESEARCH_LEVEL_NAME"
+    </sql>
+
+    <sql id="Res_Column_List">
+        ID, USER_ID, GET_DATE, RESEARCH_NAME, RESEARCH_INFO, RESEARCH_LEVEL, BACKUP1, BACKUP2,
+        BACKUP3, PAIMING
+    </sql>
+
+    <sql id="selectresearch">
+        select
+        <include refid="Res_Two_Column_List"/>
+        from (
+        select
+        <include refid="Res_Column_List"/>
+        from tb_research where user_id=#{userid} ) r
+        left join (select id, researchid,fileurl from tb_research_file) rf on r.id=rf.researchid
+        left join (select DICT_NAME,DICT_CODE from SYS_DICT where GROUP_NAME='GRADE_OF_RESEARCH_RESULTS')rd on
+        r.RESEARCH_LEVEL=rd.DICT_CODE
+    </sql>
+    <!-- 成果end-->
+    <!--专业研究方向-->
+    <sql id="selectMajorResearch">
+        select ID, USER_ID, MAJOR, MAJOR_RESEARCH from TB_MAJOR_RESEARCH
+    </sql>
+
+    <!--根据申报人用户id查询申报所有信息-->
+    <select id="selectUserMgr" parameterType="pd" resultMap="allmsg">
+        select
+        <include refid="all_column"/>
+        from
+        (<include refid="selectuser"/>) spe
+        LEFT JOIN (<include refid="selectBASE"/>) BASE on spe.user_id=BASE.id
+        left join (<include refid="selectwork"/>) wor on spe.user_id=wor.user_id
+        left join (<include refid="selectAchievement"/>) achi on spe.user_id=achi.user_id
+        left join (<include refid="selectaward"/>) awa on spe.user_id=awa.user_id
+        left join (<include refid="selectbook"/>) book on spe.user_id=book.user_id
+        left join (<include refid="selectpaper"/>) pap on spe.user_id=pap.user_id
+        left join (<include refid="selectresearch"/>) res on spe.user_id=res.user_id
+        left join (<include refid="selectMajorResearch"/>) maj on spe.user_id=maj.user_id
+        WHERE spe.user_id=#{userid}
+    </select>
+
+
+<update id="updateJudgingStage" parameterType="pd" >
+        update TB_SPECIALITY_MSG
+        <set>
+            <if test="judgingStage != null" >
+                JUDGING_STAGE = #{judgingStage,jdbcType=VARCHAR},
+            </if>
+            <if test="currentState != null" >
+                CURRENT_STATE = #{currentState,jdbcType=VARCHAR},
+            </if>
+            <if test="proposeState != null" >
+                PROPOSE_STATE = #{proposeState,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_id = #{userid,jdbcType=VARCHAR}
+    </update>
+
+    <!--获取固定属性-->
+    <select id="getGuMsg" resultType="java.util.Map">
+        SELECT g.id,
+               g.display_name,
+               g.id_card_no,
+               g.unit_name,
+               g.XILIE,
+               g.professial_name,
+               g.LEIXING,
+               g.state
+        FROM (SELECT *
+              FROM (SELECT * FROM base_proposer WHERE id = #{userid}
+                                                  and STATE = '1') a
+                       LEFT JOIN (SELECT unit_code, UNIT_NAME FROM base_unit) b ON a.declare_unitcode = b.unit_code
+                       LEFT JOIN (SELECT pm1.user_id,
+                                         sd1.dict_name "XILIE",
+                                         sd3.dict_name "LEIXING",
+                                         bp1.professial_name
+                                  FROM (SELECT USER_ID,
+                                               REVIEW_SERIES,
+                                               SHENBAOMAJOR_ID,
+                                               pingshentype
+                                        FROM TB_SPECIALITY_MSG
+                                        WHERE user_id = #{userid}) pm1
+                                           LEFT JOIN (SELECT dict_code, dict_name
+                                                      FROM sys_dict
+                                                      WHERE group_name = 'REVIEW_SERIES') sd1
+                                               ON sd1.dict_code = pm1.REVIEW_SERIES
+                                           LEFT JOIN (SELECT dict_code, dict_name
+                                                      FROM sys_dict
+                                                      WHERE group_name = 'REVIEW_TYPE') sd3
+                                               ON sd3.dict_code = pm1.pingshentype
+                                           LEFT JOIN (SELECT professial_code, professial_name FROM BASE_SERIES_PROFESSIAL) bp1
+                                               ON bp1.professial_code = pm1.SHENBAOMAJOR_ID) pm ON a.id = pm.user_id) g
+    </select>
+
+</mapper>
